@@ -1,6 +1,7 @@
 package view;
 
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
+import com.fazecast.jSerialComm.SerialPort;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComboBox;
