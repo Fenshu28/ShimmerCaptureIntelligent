@@ -1,11 +1,38 @@
 package view;
 
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.JComboBox;
 import javax.swing.UIManager;
+import util.ActivePorts;
 
 public class MainFrame extends javax.swing.JFrame {
+
+    ActivePorts controllerPorts;
+    List<String> portsEnables;
+
     public MainFrame() {
+        controllerPorts = new ActivePorts();
+        portsEnables = new ArrayList<>();
         initComponents();
+        fillComponents();
+    }
+
+    private void fillComponents() {
+        portsEnables = controllerPorts.getPorts();
+        fillCombo(cmbPuertos, portsEnables);
+    }
+
+    private void fillCombo(JComboBox<String> combo, List<String> lista) {
+        combo.removeAllItems();
+        if (lista.isEmpty()) {
+            combo.addItem("No hay puertos conectados.");
+        } else {
+            for (String elem : lista) {
+                combo.addItem(elem);
+            }
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -24,6 +51,7 @@ public class MainFrame extends javax.swing.JFrame {
         chkPPG = new javax.swing.JRadioButton();
         jLabel5 = new javax.swing.JLabel();
         barBateria = new javax.swing.JProgressBar();
+        btnRecargar = new javax.swing.JButton();
         pnlDatosPaciente = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtEdad = new javax.swing.JTextField();
@@ -68,8 +96,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Seleccion el puerto del dispositivo");
 
-        cmbPuertos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         btnConectar.setText("Conectar");
 
         chkGSR.setText("GSR");
@@ -79,6 +105,13 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel5.setText("Bateria");
 
         barBateria.setValue(50);
+
+        btnRecargar.setText("R");
+        btnRecargar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRecargarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlDispositivosLayout = new javax.swing.GroupLayout(pnlDispositivos);
         pnlDispositivos.setLayout(pnlDispositivosLayout);
@@ -96,17 +129,21 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cmbPuertos, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRecargar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnConectar))
                     .addComponent(chkGSR)
                     .addComponent(chkPPG))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, Short.MAX_VALUE))
         );
         pnlDispositivosLayout.setVerticalGroup(
             pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDispositivosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnConectar)
+                    .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btnConectar)
+                        .addComponent(btnRecargar))
                     .addGroup(pnlDispositivosLayout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -165,7 +202,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jTextField2)
                     .addComponent(jLabel8)
                     .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(162, Short.MAX_VALUE))
+                .addContainerGap(150, Short.MAX_VALUE))
         );
         pnlDatosPacienteLayout.setVerticalGroup(
             pnlDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -237,7 +274,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(jButton1))
                     .addGroup(pnlArchivoLayout.createSequentialGroup()
                         .addComponent(jLabel9)
-                        .addGap(0, 174, Short.MAX_VALUE))
+                        .addGap(0, 162, Short.MAX_VALUE))
                     .addGroup(pnlArchivoLayout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -258,7 +295,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -294,7 +331,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 725, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -317,6 +354,10 @@ public class MainFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRecargarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRecargarActionPerformed
+        fillCombo(cmbPuertos, portsEnables);
+    }//GEN-LAST:event_btnRecargarActionPerformed
+
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(new FlatArcOrangeIJTheme());
@@ -338,6 +379,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnInciar;
     private javax.swing.JButton btnInciar1;
     private javax.swing.JButton btnInciar2;
+    private javax.swing.JButton btnRecargar;
     private javax.swing.JRadioButton chkGSR;
     private javax.swing.JRadioButton chkPPG;
     private javax.swing.JComboBox<String> cmbPuertos;

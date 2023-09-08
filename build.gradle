@@ -19,6 +19,7 @@ dependencies {
     implementation name: 'flatlaf-extras-3.1.1'
     implementation name: 'flatlaf-intellij-themes-3.1.1'
     implementation name: 'flatlaf-swingx-3.1.1'
+    implementation name: 'comm-2.0'    
 }
 
 test {
