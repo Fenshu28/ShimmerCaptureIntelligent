@@ -6,12 +6,19 @@ group = 'org.example'
 version = '1.0-SNAPSHOT'
 
 repositories {
+    flatDir {
+       dirs 'libs'
+   }
     mavenCentral()
 }
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.9.1')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation name: 'flatlaf-3.1.1'
+    implementation name: 'flatlaf-extras-3.1.1'
+    implementation name: 'flatlaf-intellij-themes-3.1.1'
+    implementation name: 'flatlaf-swingx-3.1.1'
 }
 
 test {
