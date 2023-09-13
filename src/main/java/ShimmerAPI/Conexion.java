@@ -55,11 +55,11 @@ public class Conexion extends BasicProcessWithCallBack {
         return status;
     }
     
-    public static void main(String[] args) {
-        Conexion c = new Conexion();
-        c.create("COM22");
-        
-    }
+//    public static void main(String[] args) {
+//        Conexion c = new Conexion();
+//        c.create("COM4");
+//        
+//    }
 
     /**
      * Crea la conexión del dispositivo Shimmer a partir de un puerto serial.
