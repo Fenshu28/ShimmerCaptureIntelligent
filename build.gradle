@@ -13,9 +13,10 @@ repositories {jcenter()
         name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/ShimmerEngineering/Shimmer-Java-Android-API")
             credentials {
-                /**Create github.properties in root project folder file with gpr.usr=GITHUB_USER_ID  & gpr.key=PERSONAL_ACCESS_TOKEN**/
-                username = "fenshu28"
-                password = "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"
+                username = "Fenshu28"
+                password = "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"
+            //username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+            //password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
             }
     }
 }

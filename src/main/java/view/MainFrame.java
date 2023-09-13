@@ -2,25 +2,38 @@ package view;
 
 import ShimmerAPI.Conexion;
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
+import com.shimmerresearch.driver.BasicProcessWithCallBack;
 import entity.Port;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.UIManager;
 import util.ActivePorts;
+import util.UpdateComponentsThread;
 
-public class MainFrame extends javax.swing.JFrame {
+public class MainFrame extends javax.swing.JFrame  {
 
     private Conexion con;
-    private ActivePorts controllerPorts;
+    private final ActivePorts controllerPorts;
     private List<Port> portsEnables;
     private String selectedPort;
+    private UpdateComponentsThread update_Thread;
 
     public MainFrame() {
         controllerPorts = new ActivePorts();
         portsEnables = new ArrayList<>();
         initComponents();
         fillComponents();
+        con = new Conexion();
+    }
+
+    public Conexion getCon() {
+        return con;
+    }
+
+    public JLabel getLbEstado() {
+        return lbEstado;
     }
 
     /**
@@ -60,9 +73,11 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void createConexion() {
-        con = new Conexion(selectedPort);
-        con.create();
+    private void createConexion() {        
+        con.create(selectedPort);
+        update_Thread = new UpdateComponentsThread(this);
+        Thread hilo = new Thread(update_Thread);
+        hilo.start();
     }
 
     @SuppressWarnings("unchecked")
@@ -431,7 +446,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_cmbPuertosActionPerformed
 
     private void btnConectarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectarActionPerformed
-
+        createConexion();
     }//GEN-LAST:event_btnConectarActionPerformed
 
     public static void main(String args[]) {
