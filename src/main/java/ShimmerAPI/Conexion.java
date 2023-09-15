@@ -1,26 +1,20 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: {$date}
- * Fecha de modificación: {$date}
- * Descripción:
+ * Fecha de creación: 15-09-2023
+ * Fecha de modificación: 15-09-2023
+ * Descripción: Clase para crear administrar la conexión con el dispositivo
+ * Shimmer.
  *********************************************** */
 package ShimmerAPI;
 
-import java.util.Collection;
-
 import com.shimmerresearch.algorithms.Filter;
 import com.shimmerresearch.biophysicalprocessing.PPGtoHRAlgorithm;
-import com.shimmerresearch.bluetooth.ShimmerBluetooth;
 import com.shimmerresearch.driver.BasicProcessWithCallBack;
 import com.shimmerresearch.driver.CallbackObject;
 import com.shimmerresearch.driver.Configuration;
-import com.shimmerresearch.driver.FormatCluster;
-import com.shimmerresearch.driver.ObjectCluster;
 import com.shimmerresearch.driver.ShimmerMsg;
 import com.shimmerresearch.driverUtilities.AssembleShimmerConfig;
-import com.shimmerresearch.driverUtilities.ChannelDetails;
 import com.shimmerresearch.pcDriver.ShimmerPC;
-import com.shimmerresearch.sensors.SensorPPG;
 import com.shimmerresearch.tools.bluetooth.BasicShimmerBluetoothManagerPc;
 
 public class Conexion extends BasicProcessWithCallBack {
@@ -42,11 +36,6 @@ public class Conexion extends BasicProcessWithCallBack {
         this.deviceComPort = deviceComPort;
     }
 
-//    public static void main(String args[]) {
-//        ConexionPPG ppg = new ConexionPPG();
-//        ppg.Conectar();
-//        ppg.setWaitForData(bluetoothManager.callBackObject);
-//    }
     public void Conectar() {
         bluetoothManager.connectShimmerThroughCommPort(deviceComPort);
         setWaitForData(bluetoothManager.callBackObject);
@@ -70,7 +59,7 @@ public class Conexion extends BasicProcessWithCallBack {
                             status = "Conectando";
                             break;
                         case CONNECTED:
-                            status =  "Conectado";
+                            status = "Conectado";
                             shimmerDevice = (ShimmerPC) bluetoothManager.getShimmerDeviceBtConnected(deviceComPort);
                             //checkECGEnabled();	//Check if ECG is enabled first before streaming
                             //5 beats to average
@@ -112,17 +101,19 @@ public class Conexion extends BasicProcessWithCallBack {
                 int msg = callbackObject.mIndicator;
                 if (msg == ShimmerPC.NOTIFICATION_SHIMMER_FULLY_INITIALIZED) {
                     try {
-                        shimmerDevice.startStreaming();
+//                        shimmerDevice.startStreaming(); // Inicia la transmisión de datos.
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
-                if (msg == ShimmerPC.NOTIFICATION_SHIMMER_STOP_STREAMING) {
-
-                } else if (msg == ShimmerPC.NOTIFICATION_SHIMMER_START_STREAMING) {
-
-                } else {
+                switch (msg) {
+                    case ShimmerPC.NOTIFICATION_SHIMMER_STOP_STREAMING:
+                        break;
+                    case ShimmerPC.NOTIFICATION_SHIMMER_START_STREAMING:
+                        break;
+                    default:
+                        break;
                 }
                 break;
             }
