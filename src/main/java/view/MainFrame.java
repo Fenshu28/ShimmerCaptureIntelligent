@@ -1,8 +1,8 @@
 package view;
 
 import ShimmerAPI.Conexion;
+import ShimmerAPI.Conexion;
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
-import com.shimmerresearch.driver.BasicProcessWithCallBack;
 import entity.Port;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,9 +72,14 @@ public class MainFrame extends javax.swing.JFrame  {
             }
         }
     }
-
+    
+    /**
+     * Crea la conexión con el dispositivo Shimmer y inicia el hilo para 
+     * actualizar los componentes del frame segun el estado.
+     */
     private void createConexion() {        
-        con.create(selectedPort);
+        con.setDeviceComPort(selectedPort);
+        con.Conectar();
         update_Thread = new UpdateComponentsThread(this);
         Thread hilo = new Thread(update_Thread);
         hilo.start();

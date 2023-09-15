@@ -14,7 +14,7 @@ repositories {jcenter()
             url = uri("https://maven.pkg.github.com/ShimmerEngineering/Shimmer-Java-Android-API")
             credentials {
                 username = "Fenshu28"
-                password = ""
+                password = "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"
             //username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
             //password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
             }
