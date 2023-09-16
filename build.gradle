@@ -15,9 +15,12 @@ repositories {jcenter()
             credentials {
                 //username = "Fenshu28"
                 //password = ""
-            username = project.findProperty("usr") ?: System.getenv("USERNAME")
-            password = project.findProperty("key") ?: System.getenv("TOKEN")
-            }
+            //username = project.findProperty("usr") ?: System.getenv("USERNAME")
+            //password = project.findProperty("key") ?: System.getenv("TOKEN")
+            username = System.getenv("usr")
+            password = System.getenv("key")
+            
+}
     }
 }
 
