@@ -23,7 +23,8 @@ public class ActivePorts {
         try {            
             SerialPort[] portSys = SerialPort.getCommPorts();
             for (SerialPort port : portSys) {
-                ports.add(new Port(port.getSystemPortName(), port.getPortDescription()));
+                ports.add(new Port(port.getSystemPortName(), 
+                        port.getPortDescription()));
                 //loadDeviceName(port.getSystemPortName());
             }
         } catch (Exception e) {

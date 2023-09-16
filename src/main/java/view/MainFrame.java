@@ -488,7 +488,8 @@ public class MainFrame extends javax.swing.JFrame  {
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void cmbPortsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPortsActionPerformed
-        selectedPort = portsEnables.get(cmbPorts.getSelectedIndex()).getNombre();
+        selectedPort = portsEnables.get(
+                cmbPorts.getSelectedIndex()).getNombre();
         System.out.println("puerto seleccionado: " + selectedPort);
     }//GEN-LAST:event_cmbPortsActionPerformed
 
@@ -497,7 +498,9 @@ public class MainFrame extends javax.swing.JFrame  {
     }//GEN-LAST:event_btnConectActionPerformed
 
     private void btnChoosePathFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChoosePathFileActionPerformed
-        JFileChooser fileChooser =  new JFileChooser(FileSystemView.getFileSystemView().getFileSystemView().getHomeDirectory());
+        JFileChooser fileChooser =  new JFileChooser(
+                FileSystemView.getFileSystemView().
+                        getFileSystemView().getHomeDirectory());
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         // Mostrar el cuadro de diálogo para seleccionar una ruta o archivo
         int returnValue = fileChooser.showOpenDialog(this);
@@ -507,7 +510,8 @@ public class MainFrame extends javax.swing.JFrame  {
             File selectedFile = fileChooser.getSelectedFile();
             
             // Creando el objeto para el archivo CSV.
-            file_CSV =  new FileCSV(selectedFile.getAbsolutePath(), txtNameFile.getText());
+            file_CSV =  new FileCSV(selectedFile.getAbsolutePath()+"\\", 
+                    txtNameFile.getText());
         }       
     }//GEN-LAST:event_btnChoosePathFileActionPerformed
 
@@ -516,20 +520,22 @@ public class MainFrame extends javax.swing.JFrame  {
         cabeceras.add("Edad");
         cabeceras.add("Semestre");
         cabeceras.add("Sexo");
-        cabeceras.add("Profesion");
+        cabeceras.add("Profesión");
         cabeceras.add("Procedencia");
+        file_CSV.openFile();
+        file_CSV.setColumns(cabeceras);
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnPauseActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
-        // TODO add your handling code here:
+        file_CSV.closeFile();
     }//GEN-LAST:event_btnStopActionPerformed
 
     private void btnAddMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMarkActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_btnAddMarkActionPerformed
 
     private void txtNameFileKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameFileKeyPressed

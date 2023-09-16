@@ -20,7 +20,8 @@ import com.shimmerresearch.tools.bluetooth.BasicShimmerBluetoothManagerPc;
 public class Conexion extends BasicProcessWithCallBack {
 
     ShimmerPC shimmerDevice = new ShimmerPC("ShimmerDevice"); //Shimmer3-9415
-    static BasicShimmerBluetoothManagerPc bluetoothManager = new BasicShimmerBluetoothManagerPc();
+    static BasicShimmerBluetoothManagerPc bluetoothManager
+            = new BasicShimmerBluetoothManagerPc();
     private PPGtoHRAlgorithm heartRateCalculation;
     private boolean mConfigureOnFirstTime = true;
     //Put your device COM port here:
@@ -60,15 +61,24 @@ public class Conexion extends BasicProcessWithCallBack {
                             break;
                         case CONNECTED:
                             status = "Conectado";
-                            shimmerDevice = (ShimmerPC) bluetoothManager.getShimmerDeviceBtConnected(deviceComPort);
+                            shimmerDevice = (ShimmerPC) bluetoothManager.
+                                    getShimmerDeviceBtConnected(
+                                            deviceComPort);
                             //checkECGEnabled();	//Check if ECG is enabled first before streaming
                             //5 beats to average
                             if (mConfigureOnFirstTime) {
-                                ShimmerPC cloneDevice = shimmerDevice.deepClone();
-                                cloneDevice.setSensorEnabledState(Configuration.Shimmer3.SENSOR_ID.HOST_PPG_A13, true);
-                                AssembleShimmerConfig.generateSingleShimmerConfig(cloneDevice, Configuration.COMMUNICATION_TYPE.BLUETOOTH);
-                                bluetoothManager.configureShimmer(cloneDevice);
-                                shimmerDevice.writeShimmerAndSensorsSamplingRate(128);
+                                ShimmerPC cloneDevice
+                                        = shimmerDevice.deepClone();
+                                cloneDevice.setSensorEnabledState(
+                                        Configuration.Shimmer3.SENSOR_ID.HOST_PPG_A13, true);
+                                AssembleShimmerConfig.
+                                        generateSingleShimmerConfig(
+                                                cloneDevice,
+                                                Configuration.COMMUNICATION_TYPE.BLUETOOTH);
+                                bluetoothManager.configureShimmer(
+                                        cloneDevice);
+                                shimmerDevice.
+                                        writeShimmerAndSensorsSamplingRate(128);
                                 heartRateCalculation = new PPGtoHRAlgorithm(shimmerDevice.getSamplingRateShimmer(), 5, 10);
 
                                 try {
