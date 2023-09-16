@@ -103,33 +103,38 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="jLabel3" max="32767" attributes="0"/>
-                                  <Component id="cmbPorts" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cmbPorts" min="-2" pref="179" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btnReload" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="btnConect" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="lbEstado" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="chkGSR" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="chkPPG" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnReload" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="btnConect" max="32767" attributes="0"/>
+                              <Component id="btnDisconect" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="lbEstado" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="chkGSR" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="chkPPG" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="barBattery" min="-2" pref="250" max="-2" attributes="0"/>
+                              <Component id="barBattery" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnDisconect" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -211,6 +216,9 @@
               </Properties>
             </Component>
             <Component class="javax.swing.JProgressBar" name="barBattery">
+              <Properties>
+                <Property name="stringPainted" type="boolean" value="true"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnReload">
               <Properties>
@@ -237,6 +245,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="Desconectar"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDisconectActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -277,7 +288,7 @@
                           <Component id="jLabel13" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="cmbProcedencia" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="98" max="32767" attributes="0"/>
+                      <EmptySpace pref="102" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -421,7 +432,7 @@
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="110" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="208" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="jLabel10" min="-2" max="-2" attributes="0"/>
@@ -459,6 +470,7 @@
             <Component class="javax.swing.JButton" name="btnChoosePathFile">
               <Properties>
                 <Property name="text" type="java.lang.String" value="..."/>
+                <Property name="toolTipText" type="java.lang.String" value="Haz clilck para seleccionar la ruta del archivo."/>
                 <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
@@ -472,7 +484,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel9">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Seleccionar nombre y ruta del archivo"/>
+                <Property name="text" type="java.lang.String" value="Nombre del archivo"/>
+                <Property name="toolTipText" type="java.lang.String" value=""/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel10">
@@ -519,6 +532,7 @@
             <Component class="javax.swing.JButton" name="btnAddMark">
               <Properties>
                 <Property name="text" type="java.lang.String" value="+"/>
+                <Property name="toolTipText" type="java.lang.String" value="Agregar marcador."/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddMarkActionPerformed"/>

@@ -1,15 +1,17 @@
 package view;
 
 import ShimmerAPI.Conexion;
-import ShimmerAPI.Conexion;
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
 import entity.Port;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
+import javax.swing.JRadioButton;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 import util.ActivePorts;
@@ -18,7 +20,7 @@ import util.UpdateComponentsThread;
 
 public class MainFrame extends javax.swing.JFrame  {
 
-    private Conexion con;
+    private final Conexion con;
     private final ActivePorts controllerPorts;
     private List<Port> portsEnables;
     private String selectedPort;
@@ -41,6 +43,38 @@ public class MainFrame extends javax.swing.JFrame  {
         return lbEstado;
     }
 
+    public JProgressBar getBarBattery() {
+        return barBattery;
+    }
+
+    public JButton getBtnConect() {
+        return btnConect;
+    }
+
+    public JButton getBtnDisconect() {
+        return btnDisconect;
+    }
+
+    public JButton getBtnPause() {
+        return btnPause;
+    }
+
+    public JButton getBtnPlay() {
+        return btnPlay;
+    }
+
+    public JButton getBtnStop() {
+        return btnStop;
+    }
+
+    public JRadioButton getChkGSR() {
+        return chkGSR;
+    }
+
+    public JRadioButton getChkPPG() {
+        return chkPPG;
+    }
+    
     /**
      * Llena los componentes por defecto del formaulario.
      */
@@ -72,6 +106,7 @@ public class MainFrame extends javax.swing.JFrame  {
         if (lista.isEmpty()) {
             combo.addItem("No hay puertos conectados.");
         } else {
+            
             for (String elem : lista) {
                 combo.addItem(elem);
             }
@@ -84,7 +119,7 @@ public class MainFrame extends javax.swing.JFrame  {
      */
     private void createConexion() {        
         con.setDeviceComPort(selectedPort);
-        con.Conectar();
+        con.conectar();
         update_Thread = new UpdateComponentsThread(this);
         Thread hilo = new Thread(update_Thread);
         hilo.start();
@@ -175,6 +210,8 @@ public class MainFrame extends javax.swing.JFrame  {
 
         jLabel5.setText("Bateria");
 
+        barBattery.setStringPainted(true);
+
         btnReload.setText("R");
         btnReload.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -188,6 +225,11 @@ public class MainFrame extends javax.swing.JFrame  {
         lbEstado.setText("Desconectado");
 
         btnDisconect.setText("Desconectar");
+        btnDisconect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDisconectActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlDispositivosLayout = new javax.swing.GroupLayout(pnlDispositivos);
         pnlDispositivos.setLayout(pnlDispositivosLayout);
@@ -195,28 +237,31 @@ public class MainFrame extends javax.swing.JFrame  {
             pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDispositivosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                        .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cmbPorts, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3)
+                                    .addComponent(cmbPorts, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnReload)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnConect))
+                            .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lbEstado))
+                            .addComponent(chkGSR)
+                            .addComponent(chkPPG))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnReload)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnConect, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbEstado))
-                    .addComponent(chkGSR)
-                    .addComponent(chkPPG)
+                        .addComponent(btnDisconect)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(pnlDispositivosLayout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(barBattery, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnDisconect)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(barBattery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         pnlDispositivosLayout.setVerticalGroup(
             pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -295,7 +340,7 @@ public class MainFrame extends javax.swing.JFrame  {
                     .addComponent(cmbSemestre, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel13)
                     .addComponent(cmbProcedencia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(98, Short.MAX_VALUE))
+                .addContainerGap(102, Short.MAX_VALUE))
         );
         pnlDatosPacienteLayout.setVerticalGroup(
             pnlDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -332,6 +377,7 @@ public class MainFrame extends javax.swing.JFrame  {
         pnlArchivo.setBorder(javax.swing.BorderFactory.createTitledBorder("Archivo y marcadores"));
 
         btnChoosePathFile.setText("...");
+        btnChoosePathFile.setToolTipText("Haz clilck para seleccionar la ruta del archivo.");
         btnChoosePathFile.setEnabled(false);
         btnChoosePathFile.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -345,7 +391,8 @@ public class MainFrame extends javax.swing.JFrame  {
             }
         });
 
-        jLabel9.setText("Seleccionar nombre y ruta del archivo");
+        jLabel9.setText("Nombre del archivo");
+        jLabel9.setToolTipText("");
 
         jLabel10.setText("Marcadores");
 
@@ -368,6 +415,7 @@ public class MainFrame extends javax.swing.JFrame  {
         }
 
         btnAddMark.setText("+");
+        btnAddMark.setToolTipText("Agregar marcador.");
         btnAddMark.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddMarkActionPerformed(evt);
@@ -388,7 +436,7 @@ public class MainFrame extends javax.swing.JFrame  {
                         .addComponent(btnChoosePathFile))
                     .addGroup(pnlArchivoLayout.createSequentialGroup()
                         .addComponent(jLabel9)
-                        .addGap(0, 110, Short.MAX_VALUE))
+                        .addGap(0, 208, Short.MAX_VALUE))
                     .addGroup(pnlArchivoLayout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -488,9 +536,13 @@ public class MainFrame extends javax.swing.JFrame  {
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void cmbPortsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPortsActionPerformed
-        selectedPort = portsEnables.get(
-                cmbPorts.getSelectedIndex()).getNombre();
-        System.out.println("puerto seleccionado: " + selectedPort);
+        
+        if(cmbPorts.getItemCount()>0){
+            selectedPort = portsEnables.get(
+                    cmbPorts.getSelectedIndex()).getNombre();
+            System.out.println("puerto seleccionado: " + selectedPort);
+        }
+        
     }//GEN-LAST:event_cmbPortsActionPerformed
 
     private void btnConectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectActionPerformed
@@ -545,6 +597,10 @@ public class MainFrame extends javax.swing.JFrame  {
             btnChoosePathFile.setEnabled(true);
         }
     }//GEN-LAST:event_txtNameFileKeyPressed
+
+    private void btnDisconectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconectActionPerformed
+        con.desconectar();
+    }//GEN-LAST:event_btnDisconectActionPerformed
 
     public static void main(String args[]) {
         try {

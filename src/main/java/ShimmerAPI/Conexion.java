@@ -16,18 +16,27 @@ import com.shimmerresearch.driver.ShimmerMsg;
 import com.shimmerresearch.driverUtilities.AssembleShimmerConfig;
 import com.shimmerresearch.pcDriver.ShimmerPC;
 import com.shimmerresearch.tools.bluetooth.BasicShimmerBluetoothManagerPc;
+import entity.ShimmerDispositive;
+import javax.swing.JOptionPane;
 
 public class Conexion extends BasicProcessWithCallBack {
+//    ShimmerDispositive shimmer_Dispo;
 
-    ShimmerPC shimmerDevice = new ShimmerPC("ShimmerDevice"); //Shimmer3-9415
+    private ShimmerDispositive shimmerDevice = new ShimmerDispositive(new ShimmerPC("ShimmerDevice")) ;//Shimmer3-9415
     static BasicShimmerBluetoothManagerPc bluetoothManager
             = new BasicShimmerBluetoothManagerPc();
     private PPGtoHRAlgorithm heartRateCalculation;
     private boolean mConfigureOnFirstTime = true;
     //Put your device COM port here:
-    private String deviceComPort;
+    private String deviceComPort = new String();
     private String status;
+    private String status_Stream;
     Filter lpf = null, hpf = null;
+
+    public Conexion() {
+        this.status = "Desconectado";
+        this.status_Stream =  "Stop";
+    }
 
     public String getStatus() {
         return status;
@@ -37,9 +46,30 @@ public class Conexion extends BasicProcessWithCallBack {
         this.deviceComPort = deviceComPort;
     }
 
-    public void Conectar() {
+    public String getStatus_Stream() {
+        return status_Stream;
+    }
+
+    public ShimmerDispositive getShimmerDevice() {
+        return shimmerDevice;
+    }
+    
+    public void conectar() {
         bluetoothManager.connectShimmerThroughCommPort(deviceComPort);
         setWaitForData(bluetoothManager.callBackObject);
+    }
+
+    public void desconectar() {
+        try {
+            bluetoothManager.disconnectShimmer(shimmerDevice.getDevice());
+//            shimmerDevice.getDevice().disconnect();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null,
+                    e.getMessage(),
+                    "Error al desconectar dispositivo",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     @Override
@@ -61,14 +91,14 @@ public class Conexion extends BasicProcessWithCallBack {
                             break;
                         case CONNECTED:
                             status = "Conectado";
-                            shimmerDevice = (ShimmerPC) bluetoothManager.
+                            shimmerDevice = new ShimmerDispositive((ShimmerPC) bluetoothManager.
                                     getShimmerDeviceBtConnected(
-                                            deviceComPort);
-                            //checkECGEnabled();	//Check if ECG is enabled first before streaming
+                                            deviceComPort));
+
                             //5 beats to average
                             if (mConfigureOnFirstTime) {
                                 ShimmerPC cloneDevice
-                                        = shimmerDevice.deepClone();
+                                        = shimmerDevice.getDevice().deepClone();
                                 cloneDevice.setSensorEnabledState(
                                         Configuration.Shimmer3.SENSOR_ID.HOST_PPG_A13, true);
                                 AssembleShimmerConfig.
@@ -77,15 +107,15 @@ public class Conexion extends BasicProcessWithCallBack {
                                                 Configuration.COMMUNICATION_TYPE.BLUETOOTH);
                                 bluetoothManager.configureShimmer(
                                         cloneDevice);
-                                shimmerDevice.
+                                shimmerDevice.getDevice().
                                         writeShimmerAndSensorsSamplingRate(128);
-                                heartRateCalculation = new PPGtoHRAlgorithm(shimmerDevice.getSamplingRateShimmer(), 5, 10);
+                                heartRateCalculation = new PPGtoHRAlgorithm(shimmerDevice.getDevice().getSamplingRateShimmer(), 5, 10);
 
                                 try {
                                     double[] cutoff = {5.0};
-                                    lpf = new Filter(Filter.LOW_PASS, shimmerDevice.getSamplingRateShimmer(), cutoff);
+                                    lpf = new Filter(Filter.LOW_PASS, shimmerDevice.getDevice().getSamplingRateShimmer(), cutoff);
                                     cutoff[0] = 0.5;
-                                    hpf = new Filter(Filter.HIGH_PASS, shimmerDevice.getSamplingRateShimmer(), cutoff);
+                                    hpf = new Filter(Filter.HIGH_PASS, shimmerDevice.getDevice().getSamplingRateShimmer(), cutoff);
                                 } catch (Exception e1) {
                                     // TODO Auto-generated catch block
                                     e1.printStackTrace();
@@ -93,7 +123,7 @@ public class Conexion extends BasicProcessWithCallBack {
 
                                 mConfigureOnFirstTime = false;
                             }
-                            //shimmerDevice.startStreaming();
+                            //shimmerDevice.getDevice().startStreaming();
                             break;
                         case DISCONNECTED:
                             status = "Desconectado";
@@ -111,7 +141,8 @@ public class Conexion extends BasicProcessWithCallBack {
                 int msg = callbackObject.mIndicator;
                 if (msg == ShimmerPC.NOTIFICATION_SHIMMER_FULLY_INITIALIZED) {
                     try {
-//                        shimmerDevice.startStreaming(); // Inicia la transmisión de datos.
+                        System.out.println("Inicializado.");
+//                        shimmerDevice.getDevice().startStreaming(); // Inicia la transmisión de datos.
                     } catch (Exception e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
