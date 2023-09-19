@@ -12,17 +12,23 @@ import com.shimmerresearch.biophysicalprocessing.PPGtoHRAlgorithm;
 import com.shimmerresearch.driver.BasicProcessWithCallBack;
 import com.shimmerresearch.driver.CallbackObject;
 import com.shimmerresearch.driver.Configuration;
+import com.shimmerresearch.driver.FormatCluster;
+import com.shimmerresearch.driver.ObjectCluster;
 import com.shimmerresearch.driver.ShimmerMsg;
 import com.shimmerresearch.driverUtilities.AssembleShimmerConfig;
+import com.shimmerresearch.driverUtilities.ChannelDetails;
 import com.shimmerresearch.pcDriver.ShimmerPC;
+import com.shimmerresearch.sensors.SensorPPG;
 import com.shimmerresearch.tools.bluetooth.BasicShimmerBluetoothManagerPc;
 import entity.ShimmerDispositive;
+import java.util.Collection;
 import javax.swing.JOptionPane;
+import resource.StatusConection;
 
 public class Conexion extends BasicProcessWithCallBack {
 //    ShimmerDispositive shimmer_Dispo;
 
-    private ShimmerDispositive shimmerDevice = new ShimmerDispositive(new ShimmerPC("ShimmerDevice")) ;//Shimmer3-9415
+    private ShimmerDispositive shimmerDevice = new ShimmerDispositive(new ShimmerPC("ShimmerDevice"));//Shimmer3-9415
     static BasicShimmerBluetoothManagerPc bluetoothManager
             = new BasicShimmerBluetoothManagerPc();
     private PPGtoHRAlgorithm heartRateCalculation;
@@ -35,7 +41,7 @@ public class Conexion extends BasicProcessWithCallBack {
 
     public Conexion() {
         this.status = "Desconectado";
-        this.status_Stream =  "Stop";
+        this.status_Stream = "Stop";
     }
 
     public String getStatus() {
@@ -53,7 +59,7 @@ public class Conexion extends BasicProcessWithCallBack {
     public ShimmerDispositive getShimmerDevice() {
         return shimmerDevice;
     }
-    
+
     public void conectar() {
         bluetoothManager.connectShimmerThroughCommPort(deviceComPort);
         setWaitForData(bluetoothManager.callBackObject);
@@ -128,7 +134,7 @@ public class Conexion extends BasicProcessWithCallBack {
                         case DISCONNECTED:
                             status = "Desconectado";
                         case CONNECTION_LOST:
-                            status = "Conexión perdida";
+                            status = "Desconectado";//"Conexión perdida";
                             break;
                         default:
                             break;
@@ -139,55 +145,57 @@ public class Conexion extends BasicProcessWithCallBack {
             case ShimmerPC.MSG_IDENTIFIER_NOTIFICATION_MESSAGE: {
                 CallbackObject callbackObject = (CallbackObject) object;
                 int msg = callbackObject.mIndicator;
-                if (msg == ShimmerPC.NOTIFICATION_SHIMMER_FULLY_INITIALIZED) {
-                    try {
-                        System.out.println("Inicializado.");
-//                        shimmerDevice.getDevice().startStreaming(); // Inicia la transmisión de datos.
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+                if (msg == ShimmerPC.NOTIFICATION_SHIMMER_FULLY_INITIALIZED) { // Dispositivo inicializado.
+                    status_Stream = StatusConection.Inicializado.toString();
+                    System.out.println("status stream: " + status_Stream);
                 }
                 switch (msg) {
-                    case ShimmerPC.NOTIFICATION_SHIMMER_STOP_STREAMING:
+                    case ShimmerPC.NOTIFICATION_SHIMMER_STOP_STREAMING: // Iniciando transmisión.
+                        status_Stream = StatusConection.Parado.toString();
+                        System.out.println("status stream: " + status_Stream);
                         break;
-                    case ShimmerPC.NOTIFICATION_SHIMMER_START_STREAMING:
+                    case ShimmerPC.NOTIFICATION_SHIMMER_START_STREAMING: // Parando transmisión
+                        status_Stream = StatusConection.Transmitiendo.toString();
+                        System.out.println("status stream: " + status_Stream);
                         break;
                     default:
                         break;
                 }
                 break;
             }
-            case ShimmerPC.MSG_IDENTIFIER_DATA_PACKET:
-//                double dataArrayPPG = 0;
-//                double heartRate = Double.NaN;
-//                int INVALID_RESULT = -1;
-//                ObjectCluster objc = (ObjectCluster) shimmerMSG.mB;
-//                Collection<FormatCluster> adcFormats = objc.getCollectionOfFormatClusters(SensorPPG.ObjectClusterSensorName.PPG_A13);
-//                FormatCluster format = ((FormatCluster) ObjectCluster.returnFormatCluster(adcFormats, ChannelDetails.CHANNEL_TYPE.CAL.toString())); // retrieve the calibrated data
-//                if (format != null) {
-//                    dataArrayPPG = format.mData;
-//
-//                    try {
-//                        dataArrayPPG = lpf.filterData(dataArrayPPG);
-//                        dataArrayPPG = hpf.filterData(dataArrayPPG);
-//                    } catch (Exception e) {
-//                        // TODO Auto-generated catch block
-//                        e.printStackTrace();
-//                    }
-//
-//                    Collection<FormatCluster> formatTS = objc.getCollectionOfFormatClusters(Configuration.Shimmer3.ObjectClusterSensorName.TIMESTAMP);
-//                    FormatCluster ts = ObjectCluster.returnFormatCluster(formatTS, "CAL");
-//                    double ppgTimeStamp = ts.mData;
-//                    heartRate = heartRateCalculation.ppgToHrConversion(dataArrayPPG, ppgTimeStamp);
-//                    if (heartRate == INVALID_RESULT) {
-//                        heartRate = Double.NaN;
-//                    }
-//
-//                    System.out.println("Heart rate: " + heartRate); // Aquí guardarlos datos
-//                } else {
-//                    System.out.println("ERROR! FormatCluster is Null!");
-//                }
+            case ShimmerPC.MSG_IDENTIFIER_DATA_PACKET: // Recibiendo paquetes de datos.
+                double dataArrayPPG = 0;
+                double heartRate = Double.NaN;
+                int INVALID_RESULT = -1;
+                ObjectCluster objc = (ObjectCluster) shimmerMSG.mB;
+
+                Collection<FormatCluster> adcFormats = objc.getCollectionOfFormatClusters(SensorPPG.ObjectClusterSensorName.PPG_A13);
+                FormatCluster format = ((FormatCluster) ObjectCluster.returnFormatCluster(adcFormats, ChannelDetails.CHANNEL_TYPE.CAL.toString())); // retrieve the calibrated data
+
+                if (format != null) {
+                    dataArrayPPG = format.mData;
+
+                    try {
+                        dataArrayPPG = lpf.filterData(dataArrayPPG);
+                        dataArrayPPG = hpf.filterData(dataArrayPPG);
+                    } catch (Exception e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+
+                    Collection<FormatCluster> formatTS = objc.getCollectionOfFormatClusters(Configuration.Shimmer3.ObjectClusterSensorName.TIMESTAMP);
+                    FormatCluster ts = ObjectCluster.returnFormatCluster(formatTS, "CAL");
+                    double ppgTimeStamp = ts.mData;
+                    heartRate = heartRateCalculation.ppgToHrConversion(dataArrayPPG, ppgTimeStamp);
+                    if (heartRate == INVALID_RESULT) {
+                        heartRate = Double.NaN;
+                    }
+
+                    System.out.println("Heart rate: " + heartRate); // Aquí guardarlos datos
+                } else {
+                    System.out.println("ERROR! FormatCluster is Null!");
+                }
+
                 break;
             case ShimmerPC.MSG_IDENTIFIER_PACKET_RECEPTION_RATE_OVERALL:
                 break;

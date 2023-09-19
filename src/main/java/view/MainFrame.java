@@ -33,6 +33,9 @@ public class MainFrame extends javax.swing.JFrame  {
         initComponents();
         fillComponents();
         con = new Conexion();
+        
+        btnPause.setVisible(false);
+        btnStop.setVisible(false);
     }
 
     public Conexion getCon() {
@@ -97,7 +100,6 @@ public class MainFrame extends javax.swing.JFrame  {
 
     /**
      * Método para llenar un ComboBox con datos de una lista de cadenas.
-     *
      * @param combo ComboBox que se llenará
      * @param lista Lista de elementos para insertar en el ComboBox.
      */
@@ -105,8 +107,7 @@ public class MainFrame extends javax.swing.JFrame  {
         combo.removeAllItems();
         if (lista.isEmpty()) {
             combo.addItem("No hay puertos conectados.");
-        } else {
-            
+        } else {            
             for (String elem : lista) {
                 combo.addItem(elem);
             }
@@ -145,6 +146,8 @@ public class MainFrame extends javax.swing.JFrame  {
         jLabel11 = new javax.swing.JLabel();
         lbEstado = new javax.swing.JLabel();
         btnDisconect = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
         pnlDatosPaciente = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtEdad = new javax.swing.JTextField();
@@ -168,8 +171,14 @@ public class MainFrame extends javax.swing.JFrame  {
         btnStop = new javax.swing.JButton();
         btnPause = new javax.swing.JButton();
         btnPlay = new javax.swing.JButton();
+        pnlTransmision = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Shimmer Computer Intelligent");
         setResizable(false);
 
         jLabel1.setFont(new java.awt.Font("Lucida Fax", 1, 24)); // NOI18N
@@ -183,7 +192,7 @@ public class MainFrame extends javax.swing.JFrame  {
         pnlPrincipal.setFont(new java.awt.Font("Franklin Gothic Medium", 0, 14)); // NOI18N
         java.awt.GridBagLayout pnlPrincipalLayout = new java.awt.GridBagLayout();
         pnlPrincipalLayout.columnWidths = new int[] {0, 5, 0};
-        pnlPrincipalLayout.rowHeights = new int[] {0, 5, 0, 5, 0};
+        pnlPrincipalLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0};
         pnlPrincipal.setLayout(pnlPrincipalLayout);
 
         pnlDispositivos.setBorder(javax.swing.BorderFactory.createTitledBorder("Dispositivo y sensores"));
@@ -221,15 +230,22 @@ public class MainFrame extends javax.swing.JFrame  {
 
         jLabel11.setText("Estado:");
 
+        lbEstado.setBackground(new java.awt.Color(102, 102, 102));
+        lbEstado.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
         lbEstado.setForeground(new java.awt.Color(204, 0, 51));
         lbEstado.setText("Desconectado");
 
         btnDisconect.setText("Desconectar");
+        btnDisconect.setEnabled(false);
         btnDisconect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDisconectActionPerformed(evt);
             }
         });
+
+        jLabel15.setText("jLabel15");
+
+        jLabel16.setText("jLabel16");
 
         javax.swing.GroupLayout pnlDispositivosLayout = new javax.swing.GroupLayout(pnlDispositivos);
         pnlDispositivos.setLayout(pnlDispositivosLayout);
@@ -237,7 +253,11 @@ public class MainFrame extends javax.swing.JFrame  {
             pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDispositivosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(barBattery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(pnlDispositivosLayout.createSequentialGroup()
                         .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlDispositivosLayout.createSequentialGroup()
@@ -251,17 +271,18 @@ public class MainFrame extends javax.swing.JFrame  {
                             .addGroup(pnlDispositivosLayout.createSequentialGroup()
                                 .addComponent(jLabel11)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbEstado))
+                                .addComponent(lbEstado)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDisconect))
+                    .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                        .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(chkGSR)
                             .addComponent(chkPPG))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDisconect)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(barBattery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(29, 29, 29)
+                        .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel15))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlDispositivosLayout.setVerticalGroup(
             pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -284,20 +305,23 @@ public class MainFrame extends javax.swing.JFrame  {
                 .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(barBattery, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkGSR)
+                    .addComponent(jLabel15))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkGSR)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chkPPG)
-                .addContainerGap(500, Short.MAX_VALUE))
+                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkPPG)
+                    .addComponent(jLabel16))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.2;
-        gridBagConstraints.weighty = 0.2;
+        gridBagConstraints.weighty = 0.1;
         pnlPrincipal.add(pnlDispositivos, gridBagConstraints);
 
         pnlDatosPaciente.setBorder(javax.swing.BorderFactory.createTitledBorder("Datos del paciente"));
@@ -340,7 +364,7 @@ public class MainFrame extends javax.swing.JFrame  {
                     .addComponent(cmbSemestre, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel13)
                     .addComponent(cmbProcedencia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addContainerGap(21, Short.MAX_VALUE))
         );
         pnlDatosPacienteLayout.setVerticalGroup(
             pnlDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -363,15 +387,13 @@ public class MainFrame extends javax.swing.JFrame  {
                 .addComponent(jLabel13)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbProcedencia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(149, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.2;
-        gridBagConstraints.weighty = 0.1;
         pnlPrincipal.add(pnlDatosPaciente, gridBagConstraints);
 
         pnlArchivo.setBorder(javax.swing.BorderFactory.createTitledBorder("Archivo y marcadores"));
@@ -436,7 +458,7 @@ public class MainFrame extends javax.swing.JFrame  {
                         .addComponent(btnChoosePathFile))
                     .addGroup(pnlArchivoLayout.createSequentialGroup()
                         .addComponent(jLabel9)
-                        .addGap(0, 208, Short.MAX_VALUE))
+                        .addGap(0, 127, Short.MAX_VALUE))
                     .addGroup(pnlArchivoLayout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -457,19 +479,19 @@ public class MainFrame extends javax.swing.JFrame  {
                     .addComponent(jLabel10)
                     .addComponent(btnAddMark))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 0.3;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
+        gridBagConstraints.weightx = 0.5;
         gridBagConstraints.weighty = 0.1;
         pnlPrincipal.add(pnlArchivo, gridBagConstraints);
-
-        pnlBotnes.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
         btnStop.setText("Terminar");
         btnStop.addActionListener(new java.awt.event.ActionListener() {
@@ -488,6 +510,7 @@ public class MainFrame extends javax.swing.JFrame  {
         pnlBotnes.add(btnPause);
 
         btnPlay.setText("Iniciar");
+        btnPlay.setEnabled(false);
         btnPlay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlayActionPerformed(evt);
@@ -496,10 +519,66 @@ public class MainFrame extends javax.swing.JFrame  {
         pnlBotnes.add(btnPlay);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         pnlPrincipal.add(pnlBotnes, gridBagConstraints);
+
+        pnlTransmision.setBorder(javax.swing.BorderFactory.createTitledBorder("Transmisión"));
+
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("Tiempo del experimento:");
+
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 102, 0));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel14.setText("00:00:00");
+
+        jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel17.setForeground(new java.awt.Color(255, 102, 0));
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel17.setText("00:00:00");
+
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel18.setText("Tiempo del experimento:");
+
+        javax.swing.GroupLayout pnlTransmisionLayout = new javax.swing.GroupLayout(pnlTransmision);
+        pnlTransmision.setLayout(pnlTransmisionLayout);
+        pnlTransmisionLayout.setHorizontalGroup(
+            pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTransmisionLayout.createSequentialGroup()
+                .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlTransmisionLayout.createSequentialGroup()
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+                    .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        pnlTransmisionLayout.setVerticalGroup(
+            pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTransmisionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel12, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel18))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.2;
+        pnlPrincipal.add(pnlTransmision, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -508,7 +587,7 @@ public class MainFrame extends javax.swing.JFrame  {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 766, Short.MAX_VALUE)
+                    .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -523,7 +602,7 @@ public class MainFrame extends javax.swing.JFrame  {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 695, Short.MAX_VALUE)
+                .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -549,24 +628,6 @@ public class MainFrame extends javax.swing.JFrame  {
         createConexion();
     }//GEN-LAST:event_btnConectActionPerformed
 
-    private void btnChoosePathFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChoosePathFileActionPerformed
-        JFileChooser fileChooser =  new JFileChooser(
-                FileSystemView.getFileSystemView().
-                        getFileSystemView().getHomeDirectory());
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        // Mostrar el cuadro de diálogo para seleccionar una ruta o archivo
-        int returnValue = fileChooser.showOpenDialog(this);
-        
-        if (returnValue == JFileChooser.APPROVE_OPTION) {
-            // Obtener la ruta selecionada
-            File selectedFile = fileChooser.getSelectedFile();
-            
-            // Creando el objeto para el archivo CSV.
-            file_CSV =  new FileCSV(selectedFile.getAbsolutePath()+"\\", 
-                    txtNameFile.getText());
-        }       
-    }//GEN-LAST:event_btnChoosePathFileActionPerformed
-
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
         List<String> cabeceras = new ArrayList<>();
         cabeceras.add("Edad");
@@ -586,8 +647,12 @@ public class MainFrame extends javax.swing.JFrame  {
         file_CSV.closeFile();
     }//GEN-LAST:event_btnStopActionPerformed
 
+    private void btnDisconectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconectActionPerformed
+        con.desconectar();
+    }//GEN-LAST:event_btnDisconectActionPerformed
+
     private void btnAddMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMarkActionPerformed
-        
+
     }//GEN-LAST:event_btnAddMarkActionPerformed
 
     private void txtNameFileKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameFileKeyPressed
@@ -598,9 +663,23 @@ public class MainFrame extends javax.swing.JFrame  {
         }
     }//GEN-LAST:event_txtNameFileKeyPressed
 
-    private void btnDisconectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconectActionPerformed
-        con.desconectar();
-    }//GEN-LAST:event_btnDisconectActionPerformed
+    private void btnChoosePathFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChoosePathFileActionPerformed
+        JFileChooser fileChooser =  new JFileChooser(
+            FileSystemView.getFileSystemView().
+            getFileSystemView().getHomeDirectory());
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        // Mostrar el cuadro de diálogo para seleccionar una ruta o archivo
+        int returnValue = fileChooser.showOpenDialog(this);
+
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            // Obtener la ruta selecionada
+            File selectedFile = fileChooser.getSelectedFile();
+
+            // Creando el objeto para el archivo CSV.
+            file_CSV =  new FileCSV(selectedFile.getAbsolutePath()+"\\", 
+                txtNameFile.getText());
+        }
+    }//GEN-LAST:event_btnChoosePathFileActionPerformed
 
     public static void main(String args[]) {
         try {
@@ -636,7 +715,13 @@ public class MainFrame extends javax.swing.JFrame  {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -652,6 +737,7 @@ public class MainFrame extends javax.swing.JFrame  {
     private javax.swing.JPanel pnlDatosPaciente;
     private javax.swing.JPanel pnlDispositivos;
     private javax.swing.JPanel pnlPrincipal;
+    private javax.swing.JPanel pnlTransmision;
     private javax.swing.JTable tblMarks;
     private javax.swing.JTextField txtEdad;
     private javax.swing.JTextField txtNameFile;

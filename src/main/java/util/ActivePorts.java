@@ -20,9 +20,10 @@ public class ActivePorts {
      */
     private void loadPorts() {
         ports = new ArrayList<>();
+        String descTemp = new String();
         try {
             SerialPort[] portSys = SerialPort.getCommPorts();
-            String descTemp = new String();
+            
             for (SerialPort port : portSys) {
                 if (port.getPortDescription().contains("SPP")) {
                     descTemp = "Shimmer device";
