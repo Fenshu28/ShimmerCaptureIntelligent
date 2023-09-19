@@ -25,7 +25,7 @@ import java.util.Collection;
 import javax.swing.JOptionPane;
 import resource.StatusConection;
 
-public class Conexion extends BasicProcessWithCallBack {
+public class ShimmerAPI extends BasicProcessWithCallBack {
 //    ShimmerDispositive shimmer_Dispo;
 
     private ShimmerDispositive shimmerDevice = new ShimmerDispositive(new ShimmerPC("ShimmerDevice"));//Shimmer3-9415
@@ -39,7 +39,7 @@ public class Conexion extends BasicProcessWithCallBack {
     private String status_Stream;
     Filter lpf = null, hpf = null;
 
-    public Conexion() {
+    public ShimmerAPI() {
         this.status = "Desconectado";
         this.status_Stream = "Stop";
     }
@@ -76,6 +76,20 @@ public class Conexion extends BasicProcessWithCallBack {
                     JOptionPane.ERROR_MESSAGE);
         }
 
+    }
+
+    /**
+     * Comieza la transmición de paquetes en el Shimmer.
+     */
+    public void transmitir() {
+        shimmerDevice.getDevice().startStreaming();
+    }
+
+    /**
+     * Para la transmisición de paquetes en el Shimmer.
+     */
+    public void destransmitir() {
+        shimmerDevice.getDevice().stopStreaming();
     }
 
     @Override
@@ -129,7 +143,7 @@ public class Conexion extends BasicProcessWithCallBack {
 
                                 mConfigureOnFirstTime = false;
                             }
-                            //shimmerDevice.getDevice().startStreaming();
+
                             break;
                         case DISCONNECTED:
                             status = "Desconectado";
@@ -145,16 +159,17 @@ public class Conexion extends BasicProcessWithCallBack {
             case ShimmerPC.MSG_IDENTIFIER_NOTIFICATION_MESSAGE: {
                 CallbackObject callbackObject = (CallbackObject) object;
                 int msg = callbackObject.mIndicator;
-                if (msg == ShimmerPC.NOTIFICATION_SHIMMER_FULLY_INITIALIZED) { // Dispositivo inicializado.
-                    status_Stream = StatusConection.Inicializado.toString();
-                    System.out.println("status stream: " + status_Stream);
-                }
+
                 switch (msg) {
-                    case ShimmerPC.NOTIFICATION_SHIMMER_STOP_STREAMING: // Iniciando transmisión.
+                    case ShimmerPC.NOTIFICATION_SHIMMER_FULLY_INITIALIZED:// Dispositivo inicializado.
+                        status_Stream = StatusConection.Inicializado.toString();
+                        System.out.println("status stream: " + status_Stream);
+                        break;
+                    case ShimmerPC.NOTIFICATION_SHIMMER_STOP_STREAMING: // Parando transmisión
                         status_Stream = StatusConection.Parado.toString();
                         System.out.println("status stream: " + status_Stream);
                         break;
-                    case ShimmerPC.NOTIFICATION_SHIMMER_START_STREAMING: // Parando transmisión
+                    case ShimmerPC.NOTIFICATION_SHIMMER_START_STREAMING: // Iniciando transmisión.
                         status_Stream = StatusConection.Transmitiendo.toString();
                         System.out.println("status stream: " + status_Stream);
                         break;

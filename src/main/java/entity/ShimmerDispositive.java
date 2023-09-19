@@ -9,6 +9,7 @@ package entity;
 import com.shimmerresearch.pcDriver.ShimmerPC;
 
 public class ShimmerDispositive extends ShimmerPC {
+
     private final ShimmerPC device;
 
     public ShimmerDispositive(ShimmerPC device) {
@@ -18,8 +19,8 @@ public class ShimmerDispositive extends ShimmerPC {
     public ShimmerPC getDevice() {
         return device;
     }
-       
-    public int getBatteryLevel(){
+
+    public int getBatteryLevel() {
         return (int) device.getBattStatusDetails().
                 getEstimatedChargePercentage();
     }

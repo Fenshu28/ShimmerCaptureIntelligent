@@ -8,6 +8,8 @@
 package util;
 
 import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import resource.StatusConection;
 import view.MainFrame;
 
@@ -19,6 +21,8 @@ public final class UpdateComponentsThread implements Runnable {
     private String connStatus = new String();
     private String lastConnStatusStream = new String();
     private String connStatusStream = new String();
+    private int batteryLevel;
+    private int lastBatteryLevel;
 
     public UpdateComponentsThread(MainFrame main_Frame) {
         this.main_Frame = main_Frame;
@@ -36,22 +40,28 @@ public final class UpdateComponentsThread implements Runnable {
     @Override
     public void run() {
         while (isActive()) {
-            connStatus = main_Frame.getCon().getStatus();
-            connStatusStream = main_Frame.getCon().getStatus_Stream();
+            try {
+                connStatus = main_Frame.getCon().getStatus();
+                connStatusStream = main_Frame.getCon().getStatus_Stream();
+                
+                // Procesos que ejecutará siempre.
+                updateBarBattery();
+                // Procesos que ejecutará solo si el estado cambia.
+                if (!lastConnStatus.equals(connStatus)) {
+                    updateLabelConn();
+                    updateButtonsConn();
+                } else if (!lastConnStatusStream.equals(
+                        connStatusStream)) {
+                    updateButtonsStream();
+                }
 
-            // Procesos que se ejecutará siempre.
-            updateBarBattery();
-
-            // Procesos que ejecutará solo si el estado cambia.
-            if (!lastConnStatus.equals(connStatus)) {
-                updateLabelConn();
-                updateButtonsConn();
-            } else if (!lastConnStatusStream.equals(connStatusStream)) {
-                updateButtonsStream();
+                lastConnStatus = connStatus;
+                lastConnStatusStream = connStatusStream;
+                
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(UpdateComponentsThread.class.getName()).log(Level.SEVERE, null, ex);
             }
-
-            lastConnStatus = connStatus;
-            lastConnStatusStream = connStatusStream;
         }
     }
 

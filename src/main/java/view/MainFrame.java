@@ -1,6 +1,6 @@
 package view;
 
-import ShimmerAPI.Conexion;
+import ShimmerAPI.ShimmerAPI;
 import com.formdev.flatlaf.intellijthemes.FlatArcOrangeIJTheme;
 import entity.Port;
 import java.io.File;
@@ -18,9 +18,9 @@ import util.ActivePorts;
 import util.FileCSV;
 import util.UpdateComponentsThread;
 
-public class MainFrame extends javax.swing.JFrame  {
+public class MainFrame extends javax.swing.JFrame {
 
-    private final Conexion con;
+    private final ShimmerAPI con;
     private final ActivePorts controllerPorts;
     private List<Port> portsEnables;
     private String selectedPort;
@@ -32,13 +32,13 @@ public class MainFrame extends javax.swing.JFrame  {
         portsEnables = new ArrayList<>();
         initComponents();
         fillComponents();
-        con = new Conexion();
-        
+        con = new ShimmerAPI();
+
         btnPause.setVisible(false);
         btnStop.setVisible(false);
     }
 
-    public Conexion getCon() {
+    public ShimmerAPI getCon() {
         return con;
     }
 
@@ -77,7 +77,7 @@ public class MainFrame extends javax.swing.JFrame  {
     public JRadioButton getChkPPG() {
         return chkPPG;
     }
-    
+
     /**
      * Llena los componentes por defecto del formaulario.
      */
@@ -100,6 +100,7 @@ public class MainFrame extends javax.swing.JFrame  {
 
     /**
      * Método para llenar un ComboBox con datos de una lista de cadenas.
+     *
      * @param combo ComboBox que se llenará
      * @param lista Lista de elementos para insertar en el ComboBox.
      */
@@ -107,23 +108,31 @@ public class MainFrame extends javax.swing.JFrame  {
         combo.removeAllItems();
         if (lista.isEmpty()) {
             combo.addItem("No hay puertos conectados.");
-        } else {            
+        } else {
             for (String elem : lista) {
                 combo.addItem(elem);
             }
         }
     }
-    
+
     /**
-     * Crea la conexión con el dispositivo Shimmer y inicia el hilo para 
+     * Crea la conexión con el dispositivo Shimmer y inicia el hilo para
      * actualizar los componentes del frame segun el estado.
      */
-    private void createConexion() {        
+    private void createConexion() {
         con.setDeviceComPort(selectedPort);
         con.conectar();
         update_Thread = new UpdateComponentsThread(this);
         Thread hilo = new Thread(update_Thread);
         hilo.start();
+    }
+
+    private void iniciarTransmicion() {
+        con.transmitir();
+    }
+
+    private void terminarTransmision() {
+        con.destransmitir();
     }
 
     @SuppressWarnings("unchecked")
@@ -510,7 +519,6 @@ public class MainFrame extends javax.swing.JFrame  {
         pnlBotnes.add(btnPause);
 
         btnPlay.setText("Iniciar");
-        btnPlay.setEnabled(false);
         btnPlay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlayActionPerformed(evt);
@@ -615,13 +623,13 @@ public class MainFrame extends javax.swing.JFrame  {
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void cmbPortsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPortsActionPerformed
-        
-        if(cmbPorts.getItemCount()>0){
+
+        if (cmbPorts.getItemCount() > 0) {
             selectedPort = portsEnables.get(
                     cmbPorts.getSelectedIndex()).getNombre();
             System.out.println("puerto seleccionado: " + selectedPort);
         }
-        
+
     }//GEN-LAST:event_cmbPortsActionPerformed
 
     private void btnConectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectActionPerformed
@@ -629,22 +637,26 @@ public class MainFrame extends javax.swing.JFrame  {
     }//GEN-LAST:event_btnConectActionPerformed
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        List<String> cabeceras = new ArrayList<>();
-        cabeceras.add("Edad");
-        cabeceras.add("Semestre");
-        cabeceras.add("Sexo");
-        cabeceras.add("Profesión");
-        cabeceras.add("Procedencia");
-        file_CSV.openFile();
-        file_CSV.setColumns(cabeceras);
+        iniciarTransmicion();
+
+//        List<String> cabeceras = new ArrayList<>();
+//        cabeceras.add("Edad");
+//        cabeceras.add("Semestre");
+//        cabeceras.add("Sexo");
+//        cabeceras.add("Profesión");
+//        cabeceras.add("Procedencia");
+//        file_CSV.openFile();
+//        file_CSV.setColumns(cabeceras);
+
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
-        
+
     }//GEN-LAST:event_btnPauseActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
-        file_CSV.closeFile();
+        terminarTransmision();
+//        file_CSV.closeFile();
     }//GEN-LAST:event_btnStopActionPerformed
 
     private void btnDisconectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconectActionPerformed
@@ -656,17 +668,17 @@ public class MainFrame extends javax.swing.JFrame  {
     }//GEN-LAST:event_btnAddMarkActionPerformed
 
     private void txtNameFileKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameFileKeyPressed
-        if(txtNameFile.getText().isEmpty()){
+        if (txtNameFile.getText().isEmpty()) {
             btnChoosePathFile.setEnabled(false);
-        }else{
+        } else {
             btnChoosePathFile.setEnabled(true);
         }
     }//GEN-LAST:event_txtNameFileKeyPressed
 
     private void btnChoosePathFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChoosePathFileActionPerformed
-        JFileChooser fileChooser =  new JFileChooser(
-            FileSystemView.getFileSystemView().
-            getFileSystemView().getHomeDirectory());
+        JFileChooser fileChooser = new JFileChooser(
+                FileSystemView.getFileSystemView().
+                        getFileSystemView().getHomeDirectory());
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         // Mostrar el cuadro de diálogo para seleccionar una ruta o archivo
         int returnValue = fileChooser.showOpenDialog(this);
@@ -676,8 +688,8 @@ public class MainFrame extends javax.swing.JFrame  {
             File selectedFile = fileChooser.getSelectedFile();
 
             // Creando el objeto para el archivo CSV.
-            file_CSV =  new FileCSV(selectedFile.getAbsolutePath()+"\\", 
-                txtNameFile.getText());
+            file_CSV = new FileCSV(selectedFile.getAbsolutePath() + "\\",
+                    txtNameFile.getText());
         }
     }//GEN-LAST:event_btnChoosePathFileActionPerformed
 
