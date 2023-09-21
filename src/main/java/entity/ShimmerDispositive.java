@@ -7,21 +7,31 @@
 package entity;
 
 import com.shimmerresearch.pcDriver.ShimmerPC;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ShimmerDispositive extends ShimmerPC {
 
     private final ShimmerPC device;
+    private List<String> data;
 
     public ShimmerDispositive(ShimmerPC device) {
         this.device = device;
+        data =  new ArrayList<>();
     }
 
     public ShimmerPC getDevice() {
         return device;
     }
 
+    public List<String> getData() {
+        return data;
+    }
+    
     public int getBatteryLevel() {
         return (int) device.getBattStatusDetails().
                 getEstimatedChargePercentage();
     }
+    
+    
 }

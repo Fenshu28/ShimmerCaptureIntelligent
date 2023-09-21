@@ -43,9 +43,7 @@ public final class UpdateComponentsThread implements Runnable {
             try {
                 connStatus = main_Frame.getCon().getStatus();
                 connStatusStream = main_Frame.getCon().getStatus_Stream();
-                
-                // Procesos que ejecutará siempre.
-                updateBarBattery();
+
                 // Procesos que ejecutará solo si el estado cambia.
                 if (!lastConnStatus.equals(connStatus)) {
                     updateLabelConn();
@@ -55,9 +53,17 @@ public final class UpdateComponentsThread implements Runnable {
                     updateButtonsStream();
                 }
 
+                if (!connStatusStream.equals(StatusConection.Transmitiendo.toString())) {
+                    updateBarBattery();
+                    updateFileProp(true);
+                } else {
+                    updateDataLabel();
+                    updateFileProp(false);
+                }
+
                 lastConnStatus = connStatus;
                 lastConnStatusStream = connStatusStream;
-                
+
                 Thread.sleep(500);
             } catch (InterruptedException ex) {
                 Logger.getLogger(UpdateComponentsThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -132,5 +138,24 @@ public final class UpdateComponentsThread implements Runnable {
         main_Frame.getBtnPause().setVisible(!flag);
         main_Frame.getBtnStop().setVisible(!flag);
 
+    }
+
+    private void updateDataLabel() {
+        if (main_Frame.getCon().getShimmerDevice().getData() != null) {
+            main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
+                    .getData().get(0) + " Simens");
+            main_Frame.getLbGsrRes().setText(main_Frame.getCon().getShimmerDevice()
+                    .getData().get(2) + " KOhms");
+            main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
+                    .getData().get(4) + " Beats/min.");
+            main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
+                    .getData().get(8) + " mVolts"); // Se debe cambiar por 7.
+        }
+
+    }
+
+    private void updateFileProp(boolean flag) {
+        main_Frame.getBtnChoosePathFile().setEnabled(flag);
+        main_Frame.getTxtNameFile().setEnabled(flag);
     }
 }

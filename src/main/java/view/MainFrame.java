@@ -15,7 +15,10 @@ import javax.swing.JRadioButton;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 import util.ActivePorts;
-import util.FileCSV;
+import entity.FileCSV;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import util.UpdateComponentsThread;
 
 public class MainFrame extends javax.swing.JFrame {
@@ -36,6 +39,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         btnPause.setVisible(false);
         btnStop.setVisible(false);
+        con.setMarkExp(txtNumExp.getText());
     }
 
     public ShimmerAPI getCon() {
@@ -71,13 +75,53 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     public JRadioButton getChkGSR() {
-        return chkGSR;
+        return chkGsrCond;
     }
 
     public JRadioButton getChkPPG() {
-        return chkPPG;
+        return chkHR;
     }
 
+    public JRadioButton getChkGsrCond() {
+        return chkGsrCond;
+    }
+
+    public JRadioButton getChkGsrRes() {
+        return chkGsrRes;
+    }
+
+    public JRadioButton getChkHR() {
+        return chkHR;
+    }
+
+    public JLabel getLbGsrCond() {
+        return lbGsrCond;
+    }
+
+    public JLabel getLbGsrRes() {
+        return lbGsrRes;
+    }
+
+    public JLabel getLbHR() {
+        return lbHR;
+    }
+
+    public JLabel getLbPpg() {
+        return lbPpg;
+    }
+
+    public JButton getBtnChoosePathFile() {
+        return btnChoosePathFile;
+    }
+
+    public JPanel getPnlDatosPaciente() {
+        return pnlDatosPaciente;
+    }
+
+    public JTextField getTxtNameFile() {
+        return txtNameFile;
+    }
+    
     /**
      * Llena los componentes por defecto del formaulario.
      */
@@ -128,10 +172,19 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void iniciarTransmicion() {
-        con.transmitir();
+        if (file_CSV != null) {
+            con.setMarkDinamic("");
+            con.setMarkExp("");
+            con.transmitir();
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Debe darle un nombre al archivo.",
+                    "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
     }
 
     private void terminarTransmision() {
+        file_CSV.closeFile();
         con.destransmitir();
     }
 
@@ -147,16 +200,20 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         cmbPorts = new javax.swing.JComboBox<>();
         btnConect = new javax.swing.JButton();
-        chkGSR = new javax.swing.JRadioButton();
-        chkPPG = new javax.swing.JRadioButton();
+        chkGsrCond = new javax.swing.JRadioButton();
+        chkHR = new javax.swing.JRadioButton();
         jLabel5 = new javax.swing.JLabel();
         barBattery = new javax.swing.JProgressBar();
         btnReload = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         lbEstado = new javax.swing.JLabel();
         btnDisconect = new javax.swing.JButton();
-        jLabel15 = new javax.swing.JLabel();
-        jLabel16 = new javax.swing.JLabel();
+        lbGsrCond = new javax.swing.JLabel();
+        lbHR = new javax.swing.JLabel();
+        chkPPG = new javax.swing.JRadioButton();
+        lbPpg = new javax.swing.JLabel();
+        chkGsrRes = new javax.swing.JRadioButton();
+        lbGsrRes = new javax.swing.JLabel();
         pnlDatosPaciente = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtEdad = new javax.swing.JTextField();
@@ -185,6 +242,8 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel14 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
+        txtNumExp = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Shimmer Computer Intelligent");
@@ -201,7 +260,7 @@ public class MainFrame extends javax.swing.JFrame {
         pnlPrincipal.setFont(new java.awt.Font("Franklin Gothic Medium", 0, 14)); // NOI18N
         java.awt.GridBagLayout pnlPrincipalLayout = new java.awt.GridBagLayout();
         pnlPrincipalLayout.columnWidths = new int[] {0, 5, 0};
-        pnlPrincipalLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0};
+        pnlPrincipalLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0};
         pnlPrincipal.setLayout(pnlPrincipalLayout);
 
         pnlDispositivos.setBorder(javax.swing.BorderFactory.createTitledBorder("Dispositivo y sensores"));
@@ -222,9 +281,9 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        chkGSR.setText("GSR");
+        chkGsrCond.setText("GSR conductancia");
 
-        chkPPG.setText("PPG/HR");
+        chkHR.setText("HR");
 
         jLabel5.setText("Bateria");
 
@@ -252,9 +311,17 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel15.setText("jLabel15");
+        lbGsrCond.setText("0 Simens");
 
-        jLabel16.setText("jLabel16");
+        lbHR.setText("0 Beats/min");
+
+        chkPPG.setText("PPG");
+
+        lbPpg.setText("0 mVolts");
+
+        chkGsrRes.setText("GSR resistancia");
+
+        lbGsrRes.setText("0 KOhms");
 
         javax.swing.GroupLayout pnlDispositivosLayout = new javax.swing.GroupLayout(pnlDispositivos);
         pnlDispositivos.setLayout(pnlDispositivosLayout);
@@ -262,35 +329,43 @@ public class MainFrame extends javax.swing.JFrame {
             pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDispositivosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                            .addComponent(jLabel5)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(barBattery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                                    .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel3)
+                                        .addComponent(cmbPorts, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnReload)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnConect))
+                                .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                                    .addComponent(jLabel11)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lbEstado)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnDisconect))
+                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(chkGsrCond)
+                                .addComponent(chkGsrRes))
+                            .addGap(29, 29, 29)
+                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lbGsrRes)
+                                .addComponent(lbGsrCond))))
                     .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(barBattery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                        .addGap(148, 148, 148)
                         .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel3)
-                                    .addComponent(cmbPorts, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnReload)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnConect))
-                            .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbEstado)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDisconect))
-                    .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                        .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(chkGSR)
-                            .addComponent(chkPPG))
-                        .addGap(29, 29, 29)
-                        .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel15))))
+                            .addComponent(lbHR)
+                            .addComponent(lbPpg)))
+                    .addComponent(chkHR)
+                    .addComponent(chkPPG))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlDispositivosLayout.setVerticalGroup(
@@ -316,18 +391,26 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(barBattery, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chkGSR)
-                    .addComponent(jLabel15))
+                    .addComponent(chkGsrCond)
+                    .addComponent(lbGsrCond))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkGsrRes)
+                    .addComponent(lbGsrRes))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkHR)
+                    .addComponent(lbHR))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkPPG)
-                    .addComponent(jLabel16))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbPpg))
+                .addContainerGap(215, Short.MAX_VALUE))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 0.1;
@@ -373,7 +456,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(cmbSemestre, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel13)
                     .addComponent(cmbProcedencia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlDatosPacienteLayout.setVerticalGroup(
             pnlDatosPacienteLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -401,7 +484,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         pnlPrincipal.add(pnlDatosPaciente, gridBagConstraints);
 
@@ -429,18 +512,25 @@ public class MainFrame extends javax.swing.JFrame {
 
         tblMarks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {"3", null},
+                {"4", null},
+                {"5", null},
+                {"6", null}
             },
             new String [] {
                 "Marca", "Descripción"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         jScrollPane1.setViewportView(tblMarks);
         if (tblMarks.getColumnModel().getColumnCount() > 0) {
-            tblMarks.getColumnModel().getColumn(0).setResizable(false);
             tblMarks.getColumnModel().getColumn(0).setPreferredWidth(5);
             tblMarks.getColumnModel().getColumn(1).setResizable(false);
         }
@@ -467,7 +557,7 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(btnChoosePathFile))
                     .addGroup(pnlArchivoLayout.createSequentialGroup()
                         .addComponent(jLabel9)
-                        .addGap(0, 127, Short.MAX_VALUE))
+                        .addGap(0, 199, Short.MAX_VALUE))
                     .addGroup(pnlArchivoLayout.createSequentialGroup()
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -488,13 +578,13 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel10)
                     .addComponent(btnAddMark))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 230, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
@@ -528,7 +618,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         pnlPrincipal.add(pnlBotnes, gridBagConstraints);
@@ -563,7 +653,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
                     .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -583,10 +673,30 @@ public class MainFrame extends javax.swing.JFrame {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 0.2;
         pnlPrincipal.add(pnlTransmision, gridBagConstraints);
+
+        txtNumExp.setText("1");
+        txtNumExp.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtNumExpKeyPressed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        pnlPrincipal.add(txtNumExp, gridBagConstraints);
+
+        jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel15.setText("Numero de experimento");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        pnlPrincipal.add(jLabel15, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -595,7 +705,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -638,16 +748,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
         iniciarTransmicion();
-
-//        List<String> cabeceras = new ArrayList<>();
-//        cabeceras.add("Edad");
-//        cabeceras.add("Semestre");
-//        cabeceras.add("Sexo");
-//        cabeceras.add("Profesión");
-//        cabeceras.add("Procedencia");
-//        file_CSV.openFile();
-//        file_CSV.setColumns(cabeceras);
-
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
@@ -656,7 +756,6 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
         terminarTransmision();
-//        file_CSV.closeFile();
     }//GEN-LAST:event_btnStopActionPerformed
 
     private void btnDisconectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconectActionPerformed
@@ -690,8 +789,13 @@ public class MainFrame extends javax.swing.JFrame {
             // Creando el objeto para el archivo CSV.
             file_CSV = new FileCSV(selectedFile.getAbsolutePath() + "\\",
                     txtNameFile.getText());
+            con.setFile(file_CSV);
         }
     }//GEN-LAST:event_btnChoosePathFileActionPerformed
+
+    private void txtNumExpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNumExpKeyPressed
+        con.setMarkExp(txtNumExp.getText());
+    }//GEN-LAST:event_txtNumExpKeyPressed
 
     public static void main(String args[]) {
         try {
@@ -718,7 +822,9 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnPlay;
     private javax.swing.JButton btnReload;
     private javax.swing.JButton btnStop;
-    private javax.swing.JRadioButton chkGSR;
+    private javax.swing.JRadioButton chkGsrCond;
+    private javax.swing.JRadioButton chkGsrRes;
+    private javax.swing.JRadioButton chkHR;
     private javax.swing.JRadioButton chkPPG;
     private javax.swing.JComboBox<String> cmbPorts;
     private javax.swing.JComboBox<String> cmbProcedencia;
@@ -731,7 +837,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
@@ -744,6 +849,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lbEstado;
+    private javax.swing.JLabel lbGsrCond;
+    private javax.swing.JLabel lbGsrRes;
+    private javax.swing.JLabel lbHR;
+    private javax.swing.JLabel lbPpg;
     private javax.swing.JPanel pnlArchivo;
     private javax.swing.JPanel pnlBotnes;
     private javax.swing.JPanel pnlDatosPaciente;
@@ -753,6 +862,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTable tblMarks;
     private javax.swing.JTextField txtEdad;
     private javax.swing.JTextField txtNameFile;
+    private javax.swing.JTextField txtNumExp;
     private javax.swing.JTextField txtProfesion;
     // End of variables declaration//GEN-END:variables
 }

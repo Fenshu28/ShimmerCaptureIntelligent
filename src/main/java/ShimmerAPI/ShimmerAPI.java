@@ -20,30 +20,53 @@ import com.shimmerresearch.driverUtilities.ChannelDetails;
 import com.shimmerresearch.pcDriver.ShimmerPC;
 import com.shimmerresearch.sensors.SensorPPG;
 import com.shimmerresearch.tools.bluetooth.BasicShimmerBluetoothManagerPc;
+import controller.TransmisionController;
+import entity.FileCSV;
 import entity.ShimmerDispositive;
 import java.util.Collection;
 import javax.swing.JOptionPane;
 import resource.StatusConection;
 
 public class ShimmerAPI extends BasicProcessWithCallBack {
-//    ShimmerDispositive shimmer_Dispo;
 
     private ShimmerDispositive shimmerDevice = new ShimmerDispositive(new ShimmerPC("ShimmerDevice"));//Shimmer3-9415
     static BasicShimmerBluetoothManagerPc bluetoothManager
             = new BasicShimmerBluetoothManagerPc();
     private PPGtoHRAlgorithm heartRateCalculation;
     private boolean mConfigureOnFirstTime = true;
-    //Put your device COM port here:
+    private Filter lpf = null, hpf = null;
+    // Propiedades del cliente
     private String deviceComPort = new String();
     private String status;
     private String status_Stream;
-    Filter lpf = null, hpf = null;
+    private FileCSV file;
+    private String markExp;
+    private String markDinamic;
+
+    // Controladores
+    TransmisionController transmicion_Cont;
 
     public ShimmerAPI() {
         this.status = "Desconectado";
         this.status_Stream = "Stop";
     }
 
+    public String getMarkExp() {
+        return markExp;
+    }
+
+    public void setMarkExp(String markExp) {
+        this.markExp = markExp;
+    }
+
+    public String getMarkDinamic() {
+        return markDinamic;
+    }
+
+    public void setMarkDinamic(String markDinamic) {
+        this.markDinamic = markDinamic;
+    }
+   
     public String getStatus() {
         return status;
     }
@@ -58,6 +81,14 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
 
     public ShimmerDispositive getShimmerDevice() {
         return shimmerDevice;
+    }
+
+    public FileCSV getFile() {
+        return file;
+    }
+
+    public void setFile(FileCSV file) {
+        this.file = file;
     }
 
     public void conectar() {
@@ -83,6 +114,9 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
      */
     public void transmitir() {
         shimmerDevice.getDevice().startStreaming();
+        file.openFile();
+        transmicion_Cont = new TransmisionController(file, shimmerDevice,
+                heartRateCalculation);
     }
 
     /**
@@ -179,38 +213,11 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                 break;
             }
             case ShimmerPC.MSG_IDENTIFIER_DATA_PACKET: // Recibiendo paquetes de datos.
-                double dataArrayPPG = 0;
-                double heartRate = Double.NaN;
-                int INVALID_RESULT = -1;
-                ObjectCluster objc = (ObjectCluster) shimmerMSG.mB;
-
-                Collection<FormatCluster> adcFormats = objc.getCollectionOfFormatClusters(SensorPPG.ObjectClusterSensorName.PPG_A13);
-                FormatCluster format = ((FormatCluster) ObjectCluster.returnFormatCluster(adcFormats, ChannelDetails.CHANNEL_TYPE.CAL.toString())); // retrieve the calibrated data
-
-                if (format != null) {
-                    dataArrayPPG = format.mData;
-
-                    try {
-                        dataArrayPPG = lpf.filterData(dataArrayPPG);
-                        dataArrayPPG = hpf.filterData(dataArrayPPG);
-                    } catch (Exception e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-
-                    Collection<FormatCluster> formatTS = objc.getCollectionOfFormatClusters(Configuration.Shimmer3.ObjectClusterSensorName.TIMESTAMP);
-                    FormatCluster ts = ObjectCluster.returnFormatCluster(formatTS, "CAL");
-                    double ppgTimeStamp = ts.mData;
-                    heartRate = heartRateCalculation.ppgToHrConversion(dataArrayPPG, ppgTimeStamp);
-                    if (heartRate == INVALID_RESULT) {
-                        heartRate = Double.NaN;
-                    }
-
-                    System.out.println("Heart rate: " + heartRate); // Aquí guardarlos datos
-                } else {
-                    System.out.println("ERROR! FormatCluster is Null!");
-                }
-
+                transmicion_Cont.setShimmerMSG(shimmerMSG);
+                transmicion_Cont.setMarkExp(markExp);
+                transmicion_Cont.setMarkDinamic(markDinamic);
+                
+                transmicion_Cont.log();
                 break;
             case ShimmerPC.MSG_IDENTIFIER_PACKET_RECEPTION_RATE_OVERALL:
                 break;

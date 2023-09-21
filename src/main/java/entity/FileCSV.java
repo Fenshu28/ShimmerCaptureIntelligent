@@ -4,7 +4,7 @@
  * Fecha de modificación: 13/09/2023
  * Descripción: Clase para represenar a un archivo CSV y guardar los datos.
  *********************************************** */
-package util;
+package entity;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
