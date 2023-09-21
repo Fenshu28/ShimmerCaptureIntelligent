@@ -141,7 +141,7 @@ public final class UpdateComponentsThread implements Runnable {
     }
 
     private void updateDataLabel() {
-        if (main_Frame.getCon().getShimmerDevice().getData() != null) {
+        if (main_Frame.getCon().getShimmerDevice().getData().size() > 8) {
             main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
                     .getData().get(0) + " Simens");
             main_Frame.getLbGsrRes().setText(main_Frame.getCon().getShimmerDevice()

@@ -66,7 +66,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     public void setMarkDinamic(String markDinamic) {
         this.markDinamic = markDinamic;
     }
-   
+
     public String getStatus() {
         return status;
     }
@@ -151,29 +151,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
 
                             //5 beats to average
                             if (mConfigureOnFirstTime) {
-                                ShimmerPC cloneDevice
-                                        = shimmerDevice.getDevice().deepClone();
-                                cloneDevice.setSensorEnabledState(
-                                        Configuration.Shimmer3.SENSOR_ID.HOST_PPG_A13, true);
-                                AssembleShimmerConfig.
-                                        generateSingleShimmerConfig(
-                                                cloneDevice,
-                                                Configuration.COMMUNICATION_TYPE.BLUETOOTH);
-                                bluetoothManager.configureShimmer(
-                                        cloneDevice);
-                                shimmerDevice.getDevice().
-                                        writeShimmerAndSensorsSamplingRate(128);
-                                heartRateCalculation = new PPGtoHRAlgorithm(shimmerDevice.getDevice().getSamplingRateShimmer(), 5, 10);
-
-                                try {
-                                    double[] cutoff = {5.0};
-                                    lpf = new Filter(Filter.LOW_PASS, shimmerDevice.getDevice().getSamplingRateShimmer(), cutoff);
-                                    cutoff[0] = 0.5;
-                                    hpf = new Filter(Filter.HIGH_PASS, shimmerDevice.getDevice().getSamplingRateShimmer(), cutoff);
-                                } catch (Exception e1) {
-                                    // TODO Auto-generated catch block
-                                    e1.printStackTrace();
-                                }
+                                transmicion_Cont.configPPG(bluetoothManager);
 
                                 mConfigureOnFirstTime = false;
                             }
@@ -216,7 +194,9 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                 transmicion_Cont.setShimmerMSG(shimmerMSG);
                 transmicion_Cont.setMarkExp(markExp);
                 transmicion_Cont.setMarkDinamic(markDinamic);
-                
+                transmicion_Cont.setLpf(lpf);
+                transmicion_Cont.setHpf(hpf);
+
                 transmicion_Cont.log();
                 break;
             case ShimmerPC.MSG_IDENTIFIER_PACKET_RECEPTION_RATE_OVERALL:

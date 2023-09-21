@@ -6,20 +6,26 @@
  *********************************************** */
 package controller;
 
+import com.shimmerresearch.biophysicalprocessing.ECGtoHRAdaptive;
+import com.shimmerresearch.driver.Configuration.Shimmer3.DerivedSensorsBitMask;
+import com.shimmerresearch.driverUtilities.SensorDetails;
+import com.shimmerresearch.exceptions.ShimmerException;
 import com.shimmerresearch.algorithms.Filter;
 import com.shimmerresearch.biophysicalprocessing.PPGtoHRAlgorithm;
 import com.shimmerresearch.driver.Configuration;
 import com.shimmerresearch.driver.FormatCluster;
 import com.shimmerresearch.driver.ObjectCluster;
 import com.shimmerresearch.driver.ShimmerMsg;
+import com.shimmerresearch.driverUtilities.AssembleShimmerConfig;
 import com.shimmerresearch.driverUtilities.ChannelDetails;
+import com.shimmerresearch.pcDriver.ShimmerPC;
 import com.shimmerresearch.sensors.SensorGSR;
 import com.shimmerresearch.sensors.SensorPPG;
 import com.shimmerresearch.sensors.bmpX80.SensorBMP180;
+import com.shimmerresearch.tools.bluetooth.BasicShimmerBluetoothManagerPc;
 import entity.ShimmerDispositive;
 import entity.FileCSV;
 import java.util.Collection;
-import java.util.List;
 
 public class TransmisionController {
 
@@ -32,11 +38,12 @@ public class TransmisionController {
     // Propiedades del shimmer.
     private ShimmerMsg shimmerMSG;
     private Filter lpf = null, hpf = null;
-    private final PPGtoHRAlgorithm heartRateCalculation;
+    private PPGtoHRAlgorithm heartRateCalculation;
     // Controlador.
     private final FileCsvController file_Controlle;
 
-    public TransmisionController(FileCSV file, ShimmerDispositive shimmerDevice, PPGtoHRAlgorithm heartRateCalculation) {
+    public TransmisionController(FileCSV file, ShimmerDispositive shimmerDevice,
+            PPGtoHRAlgorithm heartRateCalculation) {
         this.file = file;
         this.shimmerDevice = shimmerDevice;
         this.heartRateCalculation = heartRateCalculation;
@@ -56,6 +63,14 @@ public class TransmisionController {
         this.shimmerMSG = shimmerMSG;
     }
 
+    public void setLpf(Filter lpf) {
+        this.lpf = lpf;
+    }
+
+    public void setHpf(Filter hpf) {
+        this.hpf = hpf;
+    }
+
     public void log() {
         getDataGSR(); // 0,3 - Se agrega el GSR (Conductancia y resistancia).
         getDataHR(); // 4,5 - Se agrega el HR CAL y el proc.
@@ -65,6 +80,33 @@ public class TransmisionController {
 
         // Guarda los datos en el archivo
         file_Controlle.saveData(shimmerDevice.getData());
+    }
+
+    public void configPPG(BasicShimmerBluetoothManagerPc bluetoothManager) {
+        ShimmerPC cloneDevice
+                = shimmerDevice.getDevice().deepClone();
+        cloneDevice.setSensorEnabledState(
+                Configuration.Shimmer3.SENSOR_ID.HOST_PPG_A13, true);
+        AssembleShimmerConfig.
+                generateSingleShimmerConfig(
+                        cloneDevice,
+                        Configuration.COMMUNICATION_TYPE.BLUETOOTH);
+        bluetoothManager.configureShimmer(
+                cloneDevice);
+        shimmerDevice.getDevice().
+                writeShimmerAndSensorsSamplingRate(128);
+        heartRateCalculation = new PPGtoHRAlgorithm(shimmerDevice.getDevice().getSamplingRateShimmer(), 5, 10);
+
+        try {
+            double[] cutoff = {5.0};
+            lpf = new Filter(Filter.LOW_PASS, shimmerDevice.getDevice().getSamplingRateShimmer(), cutoff);
+            cutoff[0] = 0.5;
+            hpf = new Filter(Filter.HIGH_PASS, shimmerDevice.getDevice().getSamplingRateShimmer(), cutoff);
+
+        } catch (Exception e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
     }
 
     private void getDataHR() {
