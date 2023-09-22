@@ -8,8 +8,11 @@ package entity;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.swing.JOptionPane;
+import org.joda.time.format.DateTimeFormat;
 
 public class FileCSV {
 
@@ -21,6 +24,7 @@ public class FileCSV {
     /**
      * Crea la instancia del objeto para controlar en archivo CSV, requiere 2
      * parametros para poder crearlo.
+     *
      * @param ruta Lugar donde se guardará el archivo.
      * @param nombre_Archivo Nombre del archivo.
      */
@@ -33,8 +37,17 @@ public class FileCSV {
      * Inicia el archivo para poder insertar datos.
      */
     public void openFile() {
+        // Obtener la fecha y hora actual
+        Date fechaHoraActual = new Date();
+
+        // Crear un objeto SimpleDateFormat con el formato deseado
+        SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy-HH-mm-ss");
+
+        // Formatear la fecha y hora actual
+        String fechaHoraFormateada = formato.format(fechaHoraActual);
         try {
-            fileWriter = new FileWriter(ruta + nombre_Archivo + ".csv");
+            fileWriter = new FileWriter(ruta + "\\" + nombre_Archivo
+                    + "_" + fechaHoraFormateada + ".csv");
             bufferedWriter = new BufferedWriter(fileWriter);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
@@ -45,6 +58,7 @@ public class FileCSV {
 
     /**
      * Crea las columnas para los datos del archivo.
+     *
      * @param columns Lista del nombre de las columnas.
      */
     public void setColumns(List<String> columns) {
@@ -62,17 +76,20 @@ public class FileCSV {
 
     /**
      * Inserta una tupla de datos.
-     * @param data 
+     *
+     * @param data
      */
     public void setData(List<String> data) {
         try {
+            bufferedWriter.newLine();
+
             for (String d : data) {
                 bufferedWriter.write(d + ",");
             }
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
-                    e.getMessage(), "Error al asignar columna",
+                    e.getMessage(), "Error guardar datos",
                     JOptionPane.ERROR_MESSAGE);
         }
     }

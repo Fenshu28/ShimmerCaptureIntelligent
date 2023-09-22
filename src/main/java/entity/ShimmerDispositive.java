@@ -9,6 +9,7 @@ package entity;
 import com.shimmerresearch.pcDriver.ShimmerPC;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class ShimmerDispositive extends ShimmerPC {
 
@@ -17,7 +18,7 @@ public class ShimmerDispositive extends ShimmerPC {
 
     public ShimmerDispositive(ShimmerPC device) {
         this.device = device;
-        data =  new ArrayList<>();
+        data = new ArrayList<>();
     }
 
     public ShimmerPC getDevice() {
@@ -27,11 +28,17 @@ public class ShimmerDispositive extends ShimmerPC {
     public List<String> getData() {
         return data;
     }
-    
+
     public int getBatteryLevel() {
         return (int) device.getBattStatusDetails().
                 getEstimatedChargePercentage();
     }
-    
-    
+
+    public int checkBatteryLevel() {
+        if (getBatteryLevel() <= 20 && device.isConnected()) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
 }

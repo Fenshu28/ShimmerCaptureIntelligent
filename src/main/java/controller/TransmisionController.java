@@ -30,25 +30,37 @@ import java.util.Collection;
 public class TransmisionController {
 
     // Propiedades del cliente.
-    private final FileCSV file;
+    private FileCSV file;
     private String markExp;
     private String markDinamic;
     private final ShimmerDispositive shimmerDevice;
-    private Double lastHR;
+    // Temps
+    private double lastHR = 0;
+    private double lastGsrCalCond = 0;
+    private double lastGsrRawCond = 0;
+    private double lastGsrCalRes = 0;
+    private double lastGsrRawRes = 0;
+    private double lastPpgCal = 0;
+    private double lastPpgRaw = 0;
+    private double lastTempCal = 0;
+    private double lastTempRaw = 0;
+
     // Propiedades del shimmer.
     private ShimmerMsg shimmerMSG;
-    private Filter lpf = null, hpf = null;
+    private Filter lpf, hpf;
     private PPGtoHRAlgorithm heartRateCalculation;
     // Controlador.
-    private final FileCsvController file_Controlle;
+    private FileCsvController file_Controlle;
 
-    public TransmisionController(FileCSV file, ShimmerDispositive shimmerDevice,
-            PPGtoHRAlgorithm heartRateCalculation) {
-        this.file = file;
+    public TransmisionController(ShimmerDispositive shimmerDevice) {
         this.shimmerDevice = shimmerDevice;
-        this.heartRateCalculation = heartRateCalculation;
 
+    }
+
+    public void setFile(FileCSV file) {
+        this.file = file;
         file_Controlle = new FileCsvController(this.file);
+        file_Controlle.setHeaders();
     }
 
     public void setMarkExp(String markExp) {
@@ -63,18 +75,12 @@ public class TransmisionController {
         this.shimmerMSG = shimmerMSG;
     }
 
-    public void setLpf(Filter lpf) {
-        this.lpf = lpf;
-    }
-
-    public void setHpf(Filter hpf) {
-        this.hpf = hpf;
-    }
-
     public void log() {
+        shimmerDevice.getData().clear();
+        getTimeStamp();
         getDataGSR(); // 0,3 - Se agrega el GSR (Conductancia y resistancia).
         getDataHR(); // 4,5 - Se agrega el HR CAL y el proc.
-        getDataTemperatura(); // 5,6 - Se agrega la temperatura.
+//        getDataTemperatura(); // 5,6 - Se agrega la temperatura.
         getDataPPG(); // 7,8 - Se agrega el PPG.
         addMarks();
 
@@ -102,11 +108,22 @@ public class TransmisionController {
             lpf = new Filter(Filter.LOW_PASS, shimmerDevice.getDevice().getSamplingRateShimmer(), cutoff);
             cutoff[0] = 0.5;
             hpf = new Filter(Filter.HIGH_PASS, shimmerDevice.getDevice().getSamplingRateShimmer(), cutoff);
-
         } catch (Exception e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
         }
+    }
+
+    private void getTimeStamp() {
+        ObjectCluster objc = (ObjectCluster) shimmerMSG.mB; // Obtiene el Objeto que guarda los datos
+        // Obtiene el tiempo.
+        Collection<FormatCluster> formatTS = objc.getCollectionOfFormatClusters(
+                Configuration.Shimmer3.ObjectClusterSensorName.TIMESTAMP);
+        FormatCluster ts = ObjectCluster.returnFormatCluster(
+                formatTS, "CAL");
+        double timeStamp = ts.mData;
+        
+        shimmerDevice.getData().add(String.valueOf(timeStamp));
     }
 
     private void getDataHR() {
@@ -146,15 +163,13 @@ public class TransmisionController {
             }
 
             // Aquí guardar los datos.
-            shimmerDevice.getData().add(String.valueOf(heartRate));
-
             if (heartRate == Double.NaN) {
                 shimmerDevice.getData().add(String.valueOf(lastHR));
             } else {
-                shimmerDevice.getData().add("");
+                shimmerDevice.getData().add(String.valueOf(heartRate));
+                lastHR = heartRate;
             }
 
-            lastHR = heartRate;
         } else {
             System.out.println("ERROR! FormatCluster is Null!");
         }
@@ -171,15 +186,26 @@ public class TransmisionController {
         FormatCluster format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.CAL.toString())); // retrieve the calibrated data
 
-        ppgCal = format.mData;
+        if (format != null) {
+            ppgCal = format.mData;
+            lastPpgCal = ppgCal;
+        } else {
+            ppgCal = lastPpgCal;
+        }
 
         format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.UNCAL.toString()));
 
-        ppgRaw = format.mData;
+        if (format != null) {
+            ppgRaw = format.mData;
+            lastPpgRaw = ppgRaw;
+        } else {
+            ppgRaw = lastPpgRaw;
+        }
 
         shimmerDevice.getData().add(String.valueOf(ppgCal));
         shimmerDevice.getData().add(String.valueOf(ppgRaw));
+
     }
 
     private void getDataGSR() {
@@ -194,14 +220,20 @@ public class TransmisionController {
 
         FormatCluster format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.CAL.toString())); // retrieve the calibrated data
-
-        gsrCal = format.mData;
-
+        if (format != null) {
+            gsrCal = format.mData;
+            lastGsrCalCond = gsrCal;
+        } else {
+            gsrCal = lastGsrCalCond;
+        }
         format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.UNCAL.toString()));
-
-        gsrRaw = format.mData;
-
+        if (format != null) {
+            gsrRaw = format.mData;
+            lastGsrRawCond = gsrRaw;
+        } else {
+            gsrRaw = lastGsrRawCond;
+        }
         shimmerDevice.getData().add(String.valueOf(gsrCal));
         shimmerDevice.getData().add(String.valueOf(gsrRaw));
 
@@ -210,16 +242,23 @@ public class TransmisionController {
                 SensorGSR.ObjectClusterSensorName.GSR_RESISTANCE);
         format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.CAL.toString())); // retrieve the calibrated data
-
-        gsrCal = format.mData;
-
+        if (format != null) {
+            gsrCal = format.mData;
+            lastGsrCalRes = gsrCal;
+        } else {
+            gsrCal = lastGsrCalRes;
+        }
         format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.UNCAL.toString()));
-
-        gsrRaw = format.mData;
-
+        if (format != null) {
+            gsrRaw = format.mData;
+            lastGsrRawRes = gsrRaw;
+        } else {
+            gsrRaw = lastGsrRawRes;
+        }
         shimmerDevice.getData().add(String.valueOf(gsrCal));
         shimmerDevice.getData().add(String.valueOf(gsrRaw));
+
     }
 
     private void getDataTemperatura() {
@@ -232,14 +271,20 @@ public class TransmisionController {
                 SensorBMP180.ObjectClusterSensorName.TEMPERATURE_BMP180); // Obtiene el dato del PPG
         FormatCluster format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.CAL.toString())); // retrieve the calibrated data
-
-        tempCal = format.mData;
-
+        if (format != null) {
+            tempCal = format.mData;
+            lastTempCal = tempCal;
+        } else {
+            tempCal = lastTempCal;
+        }
         format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.UNCAL.toString()));
-
-        tempRaw = format.mData;
-
+        if (format != null) {
+            tempRaw = format.mData;
+            lastTempRaw = tempRaw;
+        } else {
+            tempRaw = lastTempRaw;
+        }
         shimmerDevice.getData().add(String.valueOf(tempCal));
         shimmerDevice.getData().add(String.valueOf(tempRaw));
     }

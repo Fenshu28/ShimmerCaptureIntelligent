@@ -7,24 +7,14 @@
  *********************************************** */
 package ShimmerAPI;
 
-import com.shimmerresearch.algorithms.Filter;
-import com.shimmerresearch.biophysicalprocessing.PPGtoHRAlgorithm;
 import com.shimmerresearch.driver.BasicProcessWithCallBack;
 import com.shimmerresearch.driver.CallbackObject;
-import com.shimmerresearch.driver.Configuration;
-import com.shimmerresearch.driver.FormatCluster;
-import com.shimmerresearch.driver.ObjectCluster;
 import com.shimmerresearch.driver.ShimmerMsg;
-import com.shimmerresearch.driverUtilities.AssembleShimmerConfig;
-import com.shimmerresearch.driverUtilities.ChannelDetails;
 import com.shimmerresearch.pcDriver.ShimmerPC;
-import com.shimmerresearch.sensors.SensorPPG;
 import com.shimmerresearch.tools.bluetooth.BasicShimmerBluetoothManagerPc;
 import controller.TransmisionController;
 import entity.FileCSV;
 import entity.ShimmerDispositive;
-import java.util.Collection;
-import javax.swing.JOptionPane;
 import resource.StatusConection;
 
 public class ShimmerAPI extends BasicProcessWithCallBack {
@@ -32,9 +22,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     private ShimmerDispositive shimmerDevice = new ShimmerDispositive(new ShimmerPC("ShimmerDevice"));//Shimmer3-9415
     static BasicShimmerBluetoothManagerPc bluetoothManager
             = new BasicShimmerBluetoothManagerPc();
-    private PPGtoHRAlgorithm heartRateCalculation;
     private boolean mConfigureOnFirstTime = true;
-    private Filter lpf = null, hpf = null;
     // Propiedades del cliente
     private String deviceComPort = new String();
     private String status;
@@ -44,7 +32,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     private String markDinamic;
 
     // Controladores
-    TransmisionController transmicion_Cont;
+    private TransmisionController transmicion_Cont;
 
     public ShimmerAPI() {
         this.status = "Desconectado";
@@ -92,21 +80,13 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     }
 
     public void conectar() {
+        transmicion_Cont = new TransmisionController(shimmerDevice);
         bluetoothManager.connectShimmerThroughCommPort(deviceComPort);
         setWaitForData(bluetoothManager.callBackObject);
     }
 
     public void desconectar() {
-        try {
-            bluetoothManager.disconnectShimmer(shimmerDevice.getDevice());
-//            shimmerDevice.getDevice().disconnect();
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null,
-                    e.getMessage(),
-                    "Error al desconectar dispositivo",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-
+        bluetoothManager.disconnectShimmer(shimmerDevice.getDevice());
     }
 
     /**
@@ -115,8 +95,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     public void transmitir() {
         shimmerDevice.getDevice().startStreaming();
         file.openFile();
-        transmicion_Cont = new TransmisionController(file, shimmerDevice,
-                heartRateCalculation);
+        transmicion_Cont.setFile(file);
     }
 
     /**
@@ -151,6 +130,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
 
                             //5 beats to average
                             if (mConfigureOnFirstTime) {
+
                                 transmicion_Cont.configPPG(bluetoothManager);
 
                                 mConfigureOnFirstTime = false;
@@ -191,13 +171,14 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                 break;
             }
             case ShimmerPC.MSG_IDENTIFIER_DATA_PACKET: // Recibiendo paquetes de datos.
-                transmicion_Cont.setShimmerMSG(shimmerMSG);
-                transmicion_Cont.setMarkExp(markExp);
-                transmicion_Cont.setMarkDinamic(markDinamic);
-                transmicion_Cont.setLpf(lpf);
-                transmicion_Cont.setHpf(hpf);
+                if (!mConfigureOnFirstTime) {
+                    transmicion_Cont.setShimmerMSG(shimmerMSG);
+                    transmicion_Cont.setMarkExp(markExp);
+                    transmicion_Cont.setMarkDinamic(markDinamic);
 
-                transmicion_Cont.log();
+                    transmicion_Cont.log();
+                }
+
                 break;
             case ShimmerPC.MSG_IDENTIFIER_PACKET_RECEPTION_RATE_OVERALL:
                 break;

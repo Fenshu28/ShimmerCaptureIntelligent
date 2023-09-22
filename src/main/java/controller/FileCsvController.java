@@ -18,25 +18,25 @@ public class FileCsvController {
     }
 
     public void saveData(List<String> data) {
-        
+
         file.setData(data);
     }
 
     public void setHeaders() {
         List<String> cabeceras = new ArrayList<>();
+        cabeceras.add("TimeStamp");
         cabeceras.add("GSR Conductancia CAL");
         cabeceras.add("GSR Conductancia RAW");
         cabeceras.add("GSR Resistancia CAL");
-        cabeceras.add("GSR Resistancia CAL");
+        cabeceras.add("GSR Resistancia RAW");
         cabeceras.add("HR CAL");
-        cabeceras.add("HR PRO"); // Prueba del Process
-        cabeceras.add("Temperatura CAL");
-        cabeceras.add("Temperatura RAW");
+//        cabeceras.add("Temperatura CAL");
+//        cabeceras.add("Temperatura RAW");
         cabeceras.add("PPG CAL");
         cabeceras.add("PPG RAW");
         cabeceras.add("Marcador experimentos");
         cabeceras.add("Marcador dinamico");
-        
+
         file.setColumns(cabeceras);
     }
 }

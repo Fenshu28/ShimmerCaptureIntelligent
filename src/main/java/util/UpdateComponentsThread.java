@@ -40,34 +40,28 @@ public final class UpdateComponentsThread implements Runnable {
     @Override
     public void run() {
         while (isActive()) {
-            try {
-                connStatus = main_Frame.getCon().getStatus();
-                connStatusStream = main_Frame.getCon().getStatus_Stream();
+            connStatus = main_Frame.getCon().getStatus();
+            connStatusStream = main_Frame.getCon().getStatus_Stream();
 
-                // Procesos que ejecutará solo si el estado cambia.
-                if (!lastConnStatus.equals(connStatus)) {
-                    updateLabelConn();
-                    updateButtonsConn();
-                } else if (!lastConnStatusStream.equals(
-                        connStatusStream)) {
-                    updateButtonsStream();
-                }
-
-                if (!connStatusStream.equals(StatusConection.Transmitiendo.toString())) {
-                    updateBarBattery();
-                    updateFileProp(true);
-                } else {
-                    updateDataLabel();
-                    updateFileProp(false);
-                }
-
-                lastConnStatus = connStatus;
-                lastConnStatusStream = connStatusStream;
-
-                Thread.sleep(500);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(UpdateComponentsThread.class.getName()).log(Level.SEVERE, null, ex);
+            // Procesos que ejecutará solo si el estado cambia.
+            if (!lastConnStatus.equals(connStatus)) {
+                updateLabelConn();
+                updateButtonsConn();
+            } else if (!lastConnStatusStream.equals(
+                    connStatusStream)) {
+                updateButtonsStream();
             }
+
+            if (!connStatusStream.equals(StatusConection.Transmitiendo.toString())) {
+                updateBarBattery();
+                updateFileProp(true);
+            } else {
+                updateDataLabel();
+                updateFileProp(false);
+            }
+
+            lastConnStatus = connStatus;
+            lastConnStatusStream = connStatusStream;
         }
     }
 
@@ -92,8 +86,9 @@ public final class UpdateComponentsThread implements Runnable {
      */
     public void updateBarBattery() {
         if (connStatus.contains(StatusConection.Conectado.toString())) {
-            main_Frame.getBarBattery().setValue((int) main_Frame.getCon().
-                    getShimmerDevice().getBatteryLevel());
+            batteryLevel = (int) main_Frame.getCon().
+                    getShimmerDevice().getBatteryLevel();
+            main_Frame.getBarBattery().setValue(batteryLevel);
         }
     }
 
@@ -141,21 +136,25 @@ public final class UpdateComponentsThread implements Runnable {
     }
 
     private void updateDataLabel() {
-        if (main_Frame.getCon().getShimmerDevice().getData().size() > 8) {
-            main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
-                    .getData().get(0) + " Simens");
-            main_Frame.getLbGsrRes().setText(main_Frame.getCon().getShimmerDevice()
-                    .getData().get(2) + " KOhms");
-            main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
-                    .getData().get(4) + " Beats/min.");
-            main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
-                    .getData().get(8) + " mVolts"); // Se debe cambiar por 7.
-        }
+//        if (main_Frame.getCon().getShimmerDevice().getData().size() >= 8) {
+        main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
+                .getData().get(1) + " Simens");
+        main_Frame.getLbGsrRes().setText(main_Frame.getCon().getShimmerDevice()
+                .getData().get(3) + " KOhms");
+        main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
+                .getData().get(5) + " Beats/min.");
+        main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
+                .getData().get(6) + " mVolts"); // Se debe cambiar por 7.
+//        }
 
     }
 
     private void updateFileProp(boolean flag) {
-        main_Frame.getBtnChoosePathFile().setEnabled(flag);
+        if (main_Frame.getTxtNameFile().getText().isEmpty()) {
+            main_Frame.getBtnChoosePathFile().setEnabled(!flag);
+        } else {
+            main_Frame.getBtnChoosePathFile().setEnabled(flag);
+        }
         main_Frame.getTxtNameFile().setEnabled(flag);
     }
 }
