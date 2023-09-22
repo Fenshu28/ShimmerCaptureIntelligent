@@ -266,6 +266,11 @@ public class MainFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Shimmer Computer Intelligent");
         setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Lucida Fax", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -748,7 +753,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConectActionPerformed
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        
+        iniciarGuardado();
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
@@ -803,6 +808,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void btnRemoveMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveMarkActionPerformed
         con.setMarkDinamic("");
     }//GEN-LAST:event_btnRemoveMarkActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        con.desconectar();
+    }//GEN-LAST:event_formWindowClosing
 
     public static void main(String args[]) {
         try {

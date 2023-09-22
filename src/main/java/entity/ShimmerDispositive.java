@@ -6,6 +6,7 @@
  *********************************************** */
 package entity;
 
+import com.shimmerresearch.driverUtilities.ShimmerBattStatusDetails;
 import com.shimmerresearch.pcDriver.ShimmerPC;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import javax.swing.JOptionPane;
 public class ShimmerDispositive extends ShimmerPC {
 
     private final ShimmerPC device;
+    private boolean dataReady = false;
     private List<String> data;
 
     public ShimmerDispositive(ShimmerPC device) {
@@ -29,7 +31,19 @@ public class ShimmerDispositive extends ShimmerPC {
         return data;
     }
 
+    public boolean isDataReady() {
+        return dataReady;
+    }
+
+    public void setDataReady(boolean dataReady) {
+        this.dataReady = dataReady;
+    }
+
     public int getBatteryLevel() {
+        //ShimmerBattStatusDetails.battVoltageToBattPercentage(
+        //device.getBattStatusDetails().getBattVoltage())
+        System.out.println("batt perce: " + device.getBattStatusDetails().
+                getEstimatedChargePercentage());
         return (int) device.getBattStatusDetails().
                 getEstimatedChargePercentage();
     }

@@ -75,15 +75,20 @@ public class TransmisionController {
         this.shimmerMSG = shimmerMSG;
     }
 
-    public void log() {
+    public void streamData() {
+        shimmerDevice.setDataReady(false);
         shimmerDevice.getData().clear();
-        getTimeStamp();
-        getDataGSR(); // 0,3 - Se agrega el GSR (Conductancia y resistancia).
-        getDataHR(); // 4,5 - Se agrega el HR CAL y el proc.
+        getTimeStamp(); // 0 - timestamp
+        getDataGSRCond(); // 1,2 - Se agrega el GSR Conductancia.
+        getDataGsrResi(); // 3,4 - Se agrega el GSR resistancia.
+        getDataHR(); // 5 - Se agrega el HR.
 //        getDataTemperatura(); // 5,6 - Se agrega la temperatura.
-        getDataPPG(); // 7,8 - Se agrega el PPG.
+        getDataPPG(); // 6,7 - Se agrega el PPG.
         addMarks();
+        shimmerDevice.setDataReady(true);
+    }
 
+    public void log() {
         // Guarda los datos en el archivo
         file_Controlle.saveData(shimmerDevice.getData());
     }
@@ -122,7 +127,7 @@ public class TransmisionController {
         FormatCluster ts = ObjectCluster.returnFormatCluster(
                 formatTS, "CAL");
         double timeStamp = ts.mData;
-        
+
         shimmerDevice.getData().add(String.valueOf(timeStamp));
     }
 
@@ -208,7 +213,7 @@ public class TransmisionController {
 
     }
 
-    private void getDataGSR() {
+    private void getDataGSRCond() {
         double gsrCal = Double.NaN;
         double gsrRaw = Double.NaN;
 
@@ -217,7 +222,7 @@ public class TransmisionController {
         // Obteniendo la conductancia.
         Collection<FormatCluster> adcFormats = objc.getCollectionOfFormatClusters(
                 SensorGSR.ObjectClusterSensorName.GSR_CONDUCTANCE); // Obtiene el dato del GSR conductancia
-
+        // Calculada
         FormatCluster format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.CAL.toString())); // retrieve the calibrated data
         if (format != null) {
@@ -226,6 +231,7 @@ public class TransmisionController {
         } else {
             gsrCal = lastGsrCalCond;
         }
+        // Cruda
         format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.UNCAL.toString()));
         if (format != null) {
@@ -236,11 +242,19 @@ public class TransmisionController {
         }
         shimmerDevice.getData().add(String.valueOf(gsrCal));
         shimmerDevice.getData().add(String.valueOf(gsrRaw));
+    }
 
-        // Obteniendo la resistancia.
-        adcFormats = objc.getCollectionOfFormatClusters(
-                SensorGSR.ObjectClusterSensorName.GSR_RESISTANCE);
-        format = ((FormatCluster) ObjectCluster.returnFormatCluster(
+    private void getDataGsrResi() {
+        double gsrCal = Double.NaN;
+        double gsrRaw = Double.NaN;
+
+        ObjectCluster objc = (ObjectCluster) shimmerMSG.mB; // Obtiene el Objeto que guarda los datos
+
+        // Obteniendo la Resistancia.
+        Collection<FormatCluster> adcFormats = objc.getCollectionOfFormatClusters(
+                SensorGSR.ObjectClusterSensorName.GSR_RESISTANCE); // Obtiene el dato del GSR conductancia
+        // Calculada
+        FormatCluster format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.CAL.toString())); // retrieve the calibrated data
         if (format != null) {
             gsrCal = format.mData;
@@ -248,6 +262,8 @@ public class TransmisionController {
         } else {
             gsrCal = lastGsrCalRes;
         }
+
+        // Cruda
         format = ((FormatCluster) ObjectCluster.returnFormatCluster(
                 adcFormats, ChannelDetails.CHANNEL_TYPE.UNCAL.toString()));
         if (format != null) {
@@ -258,7 +274,6 @@ public class TransmisionController {
         }
         shimmerDevice.getData().add(String.valueOf(gsrCal));
         shimmerDevice.getData().add(String.valueOf(gsrRaw));
-
     }
 
     private void getDataTemperatura() {

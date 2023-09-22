@@ -23,7 +23,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     static BasicShimmerBluetoothManagerPc bluetoothManager
             = new BasicShimmerBluetoothManagerPc();
     private boolean mConfigureOnFirstTime = true;
-    private boolean onRec =  false;
+    private boolean onRec = false;
     // Propiedades del cliente
     private String deviceComPort = new String();
     private String status;
@@ -98,27 +98,27 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
      * Comieza la transmición de paquetes en el Shimmer.
      */
     public void transmitir() {
-        shimmerDevice.getDevice().startStreaming();        
+        shimmerDevice.getDevice().startStreaming();
     }
 
     /**
      * Para la transmisición de paquetes en el Shimmer.
      */
     public void destransmitir() {
-        shimmerDevice.getDevice().stopStreaming();                
+        shimmerDevice.getDevice().stopStreaming();
     }
-    
-    public void guardar(){
+
+    public void guardar() {
         file.openFile();
         transmicion_Cont.setFile(file);
-        onRec =  true;
+        onRec = true;
     }
-    
-    public void cerrarGuardar(){
-        onRec =  false;        
+
+    public void cerrarGuardar() {
+        onRec = false;
     }
-    
-    public void terminarGuardado(){
+
+    public void terminarGuardado() {
         cerrarGuardar();
         file.closeFile();
     }
@@ -179,7 +179,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                     case ShimmerPC.NOTIFICATION_SHIMMER_STOP_STREAMING: // Parando transmisión
                         status_Stream = StatusConection.Parado.toString();
                         System.out.println("status stream: " + status_Stream);
-                        
+
                         break;
                     case ShimmerPC.NOTIFICATION_SHIMMER_START_STREAMING: // Iniciando transmisión.
                         status_Stream = StatusConection.Transmitiendo.toString();
@@ -191,8 +191,10 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                 break;
             }
             case ShimmerPC.MSG_IDENTIFIER_DATA_PACKET: // Recibiendo paquetes de datos.
+                transmicion_Cont.setShimmerMSG(shimmerMSG);
+                transmicion_Cont.streamData();
+
                 if (onRec) {
-                    transmicion_Cont.setShimmerMSG(shimmerMSG);
                     transmicion_Cont.setMarkExp(markExp);
                     transmicion_Cont.setMarkDinamic(markDinamic);
 
