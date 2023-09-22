@@ -171,13 +171,16 @@ public class MainFrame extends javax.swing.JFrame {
         hilo.start();
     }
 
-    private void iniciarTransmicion() {
+    private void terminarTransmision() {
+        con.destransmitir();
+    }
+
+    private void iniciarGuardado() {
         if (file_CSV != null) {
             warnigBattery();
-
             con.setMarkDinamic("");
             con.setMarkExp(txtNumExp.getText());
-            con.transmitir();
+            con.guardar();
         } else {
             JOptionPane.showMessageDialog(this,
                     "Debe darle un nombre al archivo y elegir donde se guardará.",
@@ -185,9 +188,12 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }
 
-    private void terminarTransmision() {
-        con.destransmitir();
-        file_CSV.closeFile();
+    private void pausaGuardado() {
+        con.cerrarGuardar();
+    }
+
+    private void pararGuardado() {
+        con.terminarGuardado();
     }
 
     private void warnigBattery() {
@@ -226,9 +232,6 @@ public class MainFrame extends javax.swing.JFrame {
         lbPpg = new javax.swing.JLabel();
         chkGsrRes = new javax.swing.JRadioButton();
         lbGsrRes = new javax.swing.JLabel();
-        btnTransmitir = new javax.swing.JButton();
-        jLabel16 = new javax.swing.JLabel();
-        lbEstadoTrans = new javax.swing.JLabel();
         pnlDatosPaciente = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtEdad = new javax.swing.JTextField();
@@ -246,7 +249,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         btnAddMark = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        txtMarkDianam = new javax.swing.JTextField();
         btnRemoveMark = new javax.swing.JButton();
         pnlBotnes = new javax.swing.JPanel();
         btnStop = new javax.swing.JButton();
@@ -338,16 +341,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         lbGsrRes.setText("0 KOhms");
 
-        btnTransmitir.setText("Transmitir");
-        btnTransmitir.setToolTipText("Inicia la transmición de datos.");
-
-        jLabel16.setText("Estado de transmisión:");
-
-        lbEstadoTrans.setBackground(new java.awt.Color(102, 102, 102));
-        lbEstadoTrans.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
-        lbEstadoTrans.setForeground(new java.awt.Color(204, 0, 51));
-        lbEstadoTrans.setText("Parada");
-
         javax.swing.GroupLayout pnlDispositivosLayout = new javax.swing.GroupLayout(pnlDispositivos);
         pnlDispositivos.setLayout(pnlDispositivosLayout);
         pnlDispositivosLayout.setHorizontalGroup(
@@ -355,53 +348,43 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(pnlDispositivosLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDispositivosLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnTransmitir))
+                    .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                            .addComponent(jLabel5)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(barBattery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                                    .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel3)
+                                        .addComponent(cmbPorts, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnReload)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnConect))
+                                .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                                    .addComponent(jLabel11)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(lbEstadoCon)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(btnDisconect))
+                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(chkGsrCond)
+                                .addComponent(chkGsrRes))
+                            .addGap(29, 29, 29)
+                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lbGsrRes)
+                                .addComponent(lbGsrCond))))
                     .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                        .addGap(148, 148, 148)
                         .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                    .addComponent(jLabel5)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(barBattery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                    .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(jLabel3)
-                                                .addComponent(cmbPorts, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(btnReload)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                            .addComponent(btnConect))
-                                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                            .addComponent(jLabel11)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(lbEstadoCon)))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnDisconect))
-                                .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                    .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(chkGsrCond)
-                                        .addComponent(chkGsrRes))
-                                    .addGap(29, 29, 29)
-                                    .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(lbGsrRes)
-                                        .addComponent(lbGsrCond))))
-                            .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                .addGap(148, 148, 148)
-                                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbHR)
-                                    .addComponent(lbPpg)))
-                            .addComponent(chkHR)
-                            .addComponent(chkPPG)
-                            .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                .addComponent(jLabel16)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lbEstadoTrans)))
-                        .addGap(0, 3, Short.MAX_VALUE)))
-                .addContainerGap())
+                            .addComponent(lbHR)
+                            .addComponent(lbPpg)))
+                    .addComponent(chkHR)
+                    .addComponent(chkPPG))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlDispositivosLayout.setVerticalGroup(
             pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -420,10 +403,6 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(lbEstadoCon))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel16)
-                    .addComponent(lbEstadoTrans))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -444,9 +423,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkPPG)
                     .addComponent(lbPpg))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnTransmitir)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -575,21 +552,18 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlArchivoLayout.createSequentialGroup()
-                        .addComponent(txtNameFile)
+                        .addComponent(txtNameFile, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnChoosePathFile))
+                    .addComponent(jLabel10)
+                    .addComponent(jLabel9)
                     .addGroup(pnlArchivoLayout.createSequentialGroup()
-                        .addGroup(pnlArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel10)
-                            .addComponent(jLabel9)
-                            .addGroup(pnlArchivoLayout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnAddMark)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnRemoveMark)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(txtMarkDianam, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnAddMark)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRemoveMark)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlArchivoLayout.setVerticalGroup(
             pnlArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -604,10 +578,10 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel10)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlArchivoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMarkDianam, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAddMark)
                     .addComponent(btnRemoveMark))
-                .addContainerGap(63, Short.MAX_VALUE))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -636,7 +610,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
         pnlBotnes.add(btnPause);
 
-        btnPlay.setText("Iniciar");
+        btnPlay.setText("Iniciar experimento");
         btnPlay.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPlayActionPerformed(evt);
@@ -654,7 +628,7 @@ public class MainFrame extends javax.swing.JFrame {
         pnlTransmision.setBorder(javax.swing.BorderFactory.createTitledBorder("Transmisión"));
 
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel12.setText("Tiempo del experimento:");
+        jLabel12.setText("Tiempo conectado:");
 
         jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(255, 102, 0));
@@ -681,7 +655,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
                     .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -733,7 +707,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE)
+                    .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -748,8 +722,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -775,23 +748,25 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConectActionPerformed
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        iniciarTransmicion();
+        
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
-
+        pausaGuardado();
     }//GEN-LAST:event_btnPauseActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
-        terminarTransmision();
+//        terminarTransmision();
+        pararGuardado();
     }//GEN-LAST:event_btnStopActionPerformed
 
     private void btnDisconectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconectActionPerformed
+        terminarTransmision();
         con.desconectar();
     }//GEN-LAST:event_btnDisconectActionPerformed
 
     private void btnAddMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMarkActionPerformed
-
+        con.setMarkDinamic(txtMarkDianam.getText());
     }//GEN-LAST:event_btnAddMarkActionPerformed
 
     private void txtNameFileKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameFileKeyPressed
@@ -826,7 +801,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNumExpKeyPressed
 
     private void btnRemoveMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveMarkActionPerformed
-        // TODO add your handling code here:
+        con.setMarkDinamic("");
     }//GEN-LAST:event_btnRemoveMarkActionPerformed
 
     public static void main(String args[]) {
@@ -855,7 +830,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton btnReload;
     private javax.swing.JButton btnRemoveMark;
     private javax.swing.JButton btnStop;
-    private javax.swing.JButton btnTransmitir;
     private javax.swing.JRadioButton chkGsrCond;
     private javax.swing.JRadioButton chkGsrRes;
     private javax.swing.JRadioButton chkHR;
@@ -871,7 +845,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
@@ -882,9 +855,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JLabel lbEstadoCon;
-    private javax.swing.JLabel lbEstadoTrans;
     private javax.swing.JLabel lbGsrCond;
     private javax.swing.JLabel lbGsrRes;
     private javax.swing.JLabel lbHR;
@@ -896,6 +867,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JPanel pnlPrincipal;
     private javax.swing.JPanel pnlTransmision;
     private javax.swing.JTextField txtEdad;
+    private javax.swing.JTextField txtMarkDianam;
     private javax.swing.JTextField txtNameFile;
     private javax.swing.JTextField txtNumExp;
     private javax.swing.JTextField txtProfesion;

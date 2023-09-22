@@ -21,6 +21,8 @@ public final class UpdateComponentsThread implements Runnable {
     private String connStatus = new String();
     private String lastConnStatusStream = new String();
     private String connStatusStream = new String();
+    private boolean lastStatusRecord = false;
+    private boolean statusRecord = false;
     private int batteryLevel;
     private int lastBatteryLevel;
 
@@ -42,16 +44,21 @@ public final class UpdateComponentsThread implements Runnable {
         while (isActive()) {
             connStatus = main_Frame.getCon().getStatus();
             connStatusStream = main_Frame.getCon().getStatus_Stream();
+            statusRecord = main_Frame.getCon().isOnRec();
 
             // Procesos que ejecutará solo si el estado cambia.
             if (!lastConnStatus.equals(connStatus)) {
                 updateLabelConn();
                 updateButtonsConn();
-            } else if (!lastConnStatusStream.equals(
-                    connStatusStream)) {
-                updateButtonsStream();
+            }
+            if (lastStatusRecord != statusRecord) {
+                updateButtonsRec();
             }
 
+//            if(!lastConnStatusStream.equals(connStatusStream)){
+//                
+//            }
+            
             if (!connStatusStream.equals(StatusConection.Transmitiendo.toString())) {
                 updateBarBattery();
                 updateFileProp(true);
@@ -62,6 +69,7 @@ public final class UpdateComponentsThread implements Runnable {
 
             lastConnStatus = connStatus;
             lastConnStatusStream = connStatusStream;
+            lastStatusRecord = statusRecord;
         }
     }
 
@@ -104,18 +112,11 @@ public final class UpdateComponentsThread implements Runnable {
         }
     }
 
-    public void updateButtonsStream() {
-        if (connStatusStream.contains(
-                StatusConection.Transmitiendo.toString())) { // si esta transmitiendo.
-            setActiveButtonsStream(false);
-        } else if (connStatusStream.contains(
-                StatusConection.Parado.toString())
-                || connStatusStream.contains(
-                        StatusConection.Pausado.toString())) { // si esta parado.
-            setActiveButtonsStream(true);
-        } else if (connStatusStream.contains(
-                StatusConection.Inicializado.toString())) { // si se inicializo correctamente.
-            setActiveButtonsStream(true);
+    public void updateButtonsRec() {
+        if (statusRecord) {
+            setActiveButtonsRec(false);
+        } else {
+            setActiveButtonsRec(true);
         }
     }
 
@@ -125,9 +126,7 @@ public final class UpdateComponentsThread implements Runnable {
         main_Frame.getBtnDisconect().setEnabled(flag);
     }
 
-    private void setActiveButtonsStream(boolean flag) {
-        // Botones de transmisión
-//        main_Frame.getBtnPlay().setEnabled(flag);
+    private void setActiveButtonsRec(boolean flag) {
         main_Frame.getBtnPlay().setVisible(flag);
 
         main_Frame.getBtnPause().setVisible(!flag);
