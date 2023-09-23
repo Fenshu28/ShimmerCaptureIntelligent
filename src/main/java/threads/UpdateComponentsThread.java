@@ -5,7 +5,7 @@
  * Descripción: Clase para hacer un hilo para actualizar los componentes del
  * frame.
  *********************************************** */
-package util;
+package threads;
 
 import java.awt.Color;
 import resource.StatusConection;

@@ -19,7 +19,8 @@ import entity.FileCSV;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import util.UpdateComponentsThread;
+import threads.TimerConectThread;
+import threads.UpdateComponentsThread;
 
 public class MainFrame extends javax.swing.JFrame {
 
@@ -28,7 +29,12 @@ public class MainFrame extends javax.swing.JFrame {
     private List<Port> portsEnables;
     private String selectedPort;
     private UpdateComponentsThread update_Thread;
+    private TimerConectThread timer_Con;
     private FileCSV file_CSV;
+
+    // Hilos
+    private Thread hiloComp;
+    private Thread hiloTimCon;
 
     public MainFrame() {
         controllerPorts = new ActivePorts();
@@ -125,7 +131,15 @@ public class MainFrame extends javax.swing.JFrame {
     public JLabel getLbEstadoBatt() {
         return lbEstadoBatt;
     }
-    
+
+    public JLabel getLbTimerConect() {
+        return lbTimerConect;
+    }
+
+    public JLabel getLbTimerRec() {
+        return lbTimerRec;
+    }
+
     /**
      * Llena los componentes por defecto del formaulario.
      */
@@ -170,9 +184,19 @@ public class MainFrame extends javax.swing.JFrame {
     private void createConexion() {
         con.setDeviceComPort(selectedPort);
         con.conectar();
+        // Hilo para actualizar componentes.
         update_Thread = new UpdateComponentsThread(this);
-        Thread hilo = new Thread(update_Thread);
-        hilo.start();
+        hiloComp = new Thread(update_Thread);
+        hiloComp.start();
+        // Hilo para el timer de conexión.
+        timer_Con = new TimerConectThread(this);
+        hiloTimCon = new Thread(timer_Con);
+        hiloTimCon.start();
+    }
+
+    private void desconectar() {
+        terminarTransmision();
+        con.desconectar();
     }
 
     private void terminarTransmision() {
@@ -262,8 +286,8 @@ public class MainFrame extends javax.swing.JFrame {
         btnPlay = new javax.swing.JButton();
         pnlTransmision = new javax.swing.JPanel();
         jLabel12 = new javax.swing.JLabel();
-        jLabel14 = new javax.swing.JLabel();
-        jLabel17 = new javax.swing.JLabel();
+        lbTimerConect = new javax.swing.JLabel();
+        lbTimerRec = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         txtNumExp = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
@@ -647,15 +671,15 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Tiempo conectado:");
 
-        jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel14.setText("00:00:00");
+        lbTimerConect.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lbTimerConect.setForeground(new java.awt.Color(255, 102, 0));
+        lbTimerConect.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbTimerConect.setText("00:00:00");
 
-        jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jLabel17.setForeground(new java.awt.Color(255, 102, 0));
-        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel17.setText("00:00:00");
+        lbTimerRec.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        lbTimerRec.setForeground(new java.awt.Color(255, 102, 0));
+        lbTimerRec.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lbTimerRec.setText("00:00:00");
 
         jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel18.setText("Tiempo del experimento:");
@@ -667,13 +691,13 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(pnlTransmisionLayout.createSequentialGroup()
                 .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlTransmisionLayout.createSequentialGroup()
-                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lbTimerConect, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lbTimerRec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         pnlTransmisionLayout.setVerticalGroup(
@@ -685,8 +709,8 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel18))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lbTimerRec, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbTimerConect, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -784,8 +808,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnStopActionPerformed
 
     private void btnDisconectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconectActionPerformed
-        terminarTransmision();
-        con.desconectar();
+        desconectar();
     }//GEN-LAST:event_btnDisconectActionPerformed
 
     private void btnAddMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMarkActionPerformed
@@ -828,7 +851,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRemoveMarkActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        con.desconectar();
+        desconectar();
     }//GEN-LAST:event_formWindowClosing
 
     public static void main(String args[]) {
@@ -870,9 +893,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
-    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -888,6 +909,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lbGsrRes;
     private javax.swing.JLabel lbHR;
     private javax.swing.JLabel lbPpg;
+    private javax.swing.JLabel lbTimerConect;
+    private javax.swing.JLabel lbTimerRec;
     private javax.swing.JPanel pnlArchivo;
     private javax.swing.JPanel pnlBotnes;
     private javax.swing.JPanel pnlDatosPaciente;
