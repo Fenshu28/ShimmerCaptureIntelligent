@@ -8,8 +8,6 @@
 package util;
 
 import java.awt.Color;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import resource.StatusConection;
 import view.MainFrame;
 
@@ -42,7 +40,6 @@ public final class UpdateComponentsThread implements Runnable {
     @Override
     public void run() {
         while (isActive()) {
-//            try {
             connStatus = main_Frame.getCon().getStatus();
             connStatusStream = main_Frame.getCon().getStatus_Stream();
             statusRecord = main_Frame.getCon().isOnRec();
@@ -63,18 +60,17 @@ public final class UpdateComponentsThread implements Runnable {
 
                 updateFileProp(false);
             }
-            updateDataLabel();
-//                if (connStatus.contains(StatusConection.Conectado.toString())) {
-//                    updateBarBattery();
-//                }
 
+//            if (connStatusStream.equals(StatusConection.Transmitiendo.toString())) {
+            updateDataLabel();
+//            }
+            if (connStatus.contains(StatusConection.Conectado.toString())) {
+//                    updateBarBattery();
+                updateLabelStatusBattery();
+            }
             lastConnStatus = connStatus;
             lastConnStatusStream = connStatusStream;
             lastStatusRecord = statusRecord;
-//                Thread.sleep(500);
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(UpdateComponentsThread.class.getName()).log(Level.SEVERE, null, ex);
-//            }
         }
     }
 
@@ -110,6 +106,20 @@ public final class UpdateComponentsThread implements Runnable {
 
     }
 
+    public void updateLabelStatusBattery() {
+        String batSta = main_Frame.getCon().getShimmerDevice().getBatterystatus();
+        if (batSta.contains("UNKNOWN")) {
+            main_Frame.getLbEstadoBatt().setForeground(Color.gray);
+        } else if (batSta.contains("LOW")) {
+            main_Frame.getLbEstadoBatt().setForeground(Color.red);
+        } else if (batSta.contains("MEDIUM")) {
+            main_Frame.getLbEstadoBatt().setForeground(Color.orange);
+        } else if (batSta.contains("HIGH")) {
+            main_Frame.getLbEstadoBatt().setForeground(Color.green);
+        }
+        main_Frame.getLbEstadoBatt().setText(batSta);
+    }
+
     /**
      * Actualiza los botones del frame.
      */
@@ -141,19 +151,20 @@ public final class UpdateComponentsThread implements Runnable {
 
         main_Frame.getBtnPause().setVisible(!flag);
         main_Frame.getBtnStop().setVisible(!flag);
-
     }
 
     private void updateDataLabel() {
-        if (main_Frame.getCon().getShimmerDevice().isDataReady()) {
+        try {
             main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
-                    .getData().get(1) + " Simens");
+                    .getData().get(1) + " mSimens");
             main_Frame.getLbGsrRes().setText(main_Frame.getCon().getShimmerDevice()
                     .getData().get(3) + " KOhms");
             main_Frame.getLbHR().setText(main_Frame.getCon().getShimmerDevice()
                     .getData().get(5) + " Beats/min.");
             main_Frame.getLbPpg().setText(main_Frame.getCon().getShimmerDevice()
                     .getData().get(6) + " mVolts"); // Se debe cambiar por 7.
+        } catch (Exception e) {
+            System.out.println("nopi");
         }
     }
 

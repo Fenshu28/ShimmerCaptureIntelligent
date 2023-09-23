@@ -122,6 +122,10 @@ public class MainFrame extends javax.swing.JFrame {
         return txtNameFile;
     }
 
+    public JLabel getLbEstadoBatt() {
+        return lbEstadoBatt;
+    }
+    
     /**
      * Llena los componentes por defecto del formaulario.
      */
@@ -232,6 +236,7 @@ public class MainFrame extends javax.swing.JFrame {
         lbPpg = new javax.swing.JLabel();
         chkGsrRes = new javax.swing.JRadioButton();
         lbGsrRes = new javax.swing.JLabel();
+        lbEstadoBatt = new javax.swing.JLabel();
         pnlDatosPaciente = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtEdad = new javax.swing.JTextField();
@@ -308,7 +313,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         chkHR.setText("HR");
 
-        jLabel5.setText("Bateria");
+        jLabel5.setText("Bateria:");
 
         barBattery.setStringPainted(true);
 
@@ -346,50 +351,55 @@ public class MainFrame extends javax.swing.JFrame {
 
         lbGsrRes.setText("0 KOhms");
 
+        lbEstadoBatt.setBackground(new java.awt.Color(102, 102, 102));
+        lbEstadoBatt.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
+        lbEstadoBatt.setForeground(new java.awt.Color(204, 0, 51));
+        lbEstadoBatt.setText("-");
+
         javax.swing.GroupLayout pnlDispositivosLayout = new javax.swing.GroupLayout(pnlDispositivos);
         pnlDispositivos.setLayout(pnlDispositivosLayout);
         pnlDispositivosLayout.setHorizontalGroup(
             pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDispositivosLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                            .addComponent(jLabel5)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(barBattery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                    .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(jLabel3)
-                                        .addComponent(cmbPorts, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnReload)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnConect))
-                                .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                                    .addComponent(jLabel11)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(lbEstadoCon)))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnDisconect))
-                        .addGroup(pnlDispositivosLayout.createSequentialGroup()
-                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(chkGsrCond)
-                                .addComponent(chkGsrRes))
-                            .addGap(29, 29, 29)
-                            .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lbGsrRes)
-                                .addComponent(lbGsrCond))))
+                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbEstadoBatt))
+                    .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                        .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel3)
+                                    .addComponent(cmbPorts, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnReload)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnConect))
+                            .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                                .addComponent(jLabel11)
+                                .addGap(18, 18, 18)
+                                .addComponent(lbEstadoCon)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnDisconect))
+                    .addGroup(pnlDispositivosLayout.createSequentialGroup()
+                        .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chkGsrCond)
+                            .addComponent(chkGsrRes))
+                        .addGap(29, 29, 29)
+                        .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbGsrRes)
+                            .addComponent(lbGsrCond)))
                     .addGroup(pnlDispositivosLayout.createSequentialGroup()
                         .addGap(148, 148, 148)
                         .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lbHR)
                             .addComponent(lbPpg)))
                     .addComponent(chkHR)
-                    .addComponent(chkPPG))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(chkPPG)
+                    .addComponent(barBattery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(11, Short.MAX_VALUE))
         );
         pnlDispositivosLayout.setVerticalGroup(
             pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -409,10 +419,12 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel11)
                     .addComponent(lbEstadoCon))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(barBattery, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(lbEstadoBatt))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(barBattery, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(chkGsrCond)
                     .addComponent(lbGsrCond))
@@ -660,7 +672,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
                     .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -727,7 +739,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE))
         );
 
         pack();
@@ -758,11 +770,17 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
         pausaGuardado();
+        btnPlay.setText("Continuar");
     }//GEN-LAST:event_btnPauseActionPerformed
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
 //        terminarTransmision();
         pararGuardado();
+        btnPlay.setText("Iniciar experimeto");
+        JOptionPane.showMessageDialog(this,
+                "El archivo se guardo en " + file_CSV.getRuta(),
+                "Experimento finalizado.",
+                JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_btnStopActionPerformed
 
     private void btnDisconectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconectActionPerformed
@@ -864,6 +882,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel lbEstadoBatt;
     private javax.swing.JLabel lbEstadoCon;
     private javax.swing.JLabel lbGsrCond;
     private javax.swing.JLabel lbGsrRes;

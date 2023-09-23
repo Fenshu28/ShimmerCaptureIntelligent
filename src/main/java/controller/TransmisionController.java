@@ -6,10 +6,6 @@
  *********************************************** */
 package controller;
 
-import com.shimmerresearch.biophysicalprocessing.ECGtoHRAdaptive;
-import com.shimmerresearch.driver.Configuration.Shimmer3.DerivedSensorsBitMask;
-import com.shimmerresearch.driverUtilities.SensorDetails;
-import com.shimmerresearch.exceptions.ShimmerException;
 import com.shimmerresearch.algorithms.Filter;
 import com.shimmerresearch.biophysicalprocessing.PPGtoHRAlgorithm;
 import com.shimmerresearch.driver.Configuration;
@@ -34,6 +30,7 @@ public class TransmisionController {
     private String markExp;
     private String markDinamic;
     private final ShimmerDispositive shimmerDevice;
+
     // Temps
     private double lastHR = 0;
     private double lastGsrCalCond = 0;
@@ -76,16 +73,14 @@ public class TransmisionController {
     }
 
     public void streamData() {
-        shimmerDevice.setDataReady(false);
-        shimmerDevice.getData().clear();
-        getTimeStamp(); // 0 - timestamp
-        getDataGSRCond(); // 1,2 - Se agrega el GSR Conductancia.
-        getDataGsrResi(); // 3,4 - Se agrega el GSR resistancia.
-        getDataHR(); // 5 - Se agrega el HR.
+//        shimmerDevice.getData().clear();
+        getTimeStamp(0); // 0 - timestamp
+        getDataGSRCond(1); // 1,2 - Se agrega el GSR Conductancia.
+        getDataGsrResi(3); // 3,4 - Se agrega el GSR resistancia.
+        getDataHR(5); // 5 - Se agrega el HR.
 //        getDataTemperatura(); // 5,6 - Se agrega la temperatura.
-        getDataPPG(); // 6,7 - Se agrega el PPG.
-        addMarks();
-        shimmerDevice.setDataReady(true);
+        getDataPPG(6); // 6,7 - Se agrega el PPG.
+        addMarks(8);
     }
 
     public void log() {
@@ -93,6 +88,13 @@ public class TransmisionController {
         file_Controlle.saveData(shimmerDevice.getData());
     }
 
+    /**
+     * Clase que configura el PPG con los parametros del tiempo para calcular de
+     * forma correcta el HR.
+     *
+     * @param bluetoothManager Administrador bluetooth que contiene la conexion
+     * del dispositivo.
+     */
     public void configPPG(BasicShimmerBluetoothManagerPc bluetoothManager) {
         ShimmerPC cloneDevice
                 = shimmerDevice.getDevice().deepClone();
@@ -119,8 +121,12 @@ public class TransmisionController {
         }
     }
 
-    private void getTimeStamp() {
-        ObjectCluster objc = (ObjectCluster) shimmerMSG.mB; // Obtiene el Objeto que guarda los datos
+    /**
+     * Obtiene el Timestamp del dispositivo.
+     */
+    private void getTimeStamp(int pos) {
+        // Obtiene el Objeto que guarda los datos
+        ObjectCluster objc = (ObjectCluster) shimmerMSG.mB;
         // Obtiene el tiempo.
         Collection<FormatCluster> formatTS = objc.getCollectionOfFormatClusters(
                 Configuration.Shimmer3.ObjectClusterSensorName.TIMESTAMP);
@@ -128,10 +134,13 @@ public class TransmisionController {
                 formatTS, "CAL");
         double timeStamp = ts.mData;
 
-        shimmerDevice.getData().add(String.valueOf(timeStamp));
+        shimmerDevice.getData().set(pos, String.valueOf(timeStamp));
     }
 
-    private void getDataHR() {
+    /**
+     * Obtiene el HR calculandolo apartir del tiempo y el PPG.
+     */
+    private void getDataHR(int pos) {
         double dataArrayPPG = 0;
         double heartRate = Double.NaN;
         int INVALID_RESULT = -1;
@@ -169,9 +178,9 @@ public class TransmisionController {
 
             // Aquí guardar los datos.
             if (heartRate == Double.NaN) {
-                shimmerDevice.getData().add(String.valueOf(lastHR));
+                shimmerDevice.getData().set(pos, String.valueOf(lastHR));
             } else {
-                shimmerDevice.getData().add(String.valueOf(heartRate));
+                shimmerDevice.getData().set(pos, String.valueOf(heartRate));
                 lastHR = heartRate;
             }
 
@@ -180,7 +189,10 @@ public class TransmisionController {
         }
     }
 
-    private void getDataPPG() {
+    /**
+     * Obtiene el PPG crudo y calculado en mVolts.
+     */
+    private void getDataPPG(int pos) {
         double ppgCal = Double.NaN;
         double ppgRaw = Double.NaN;
 
@@ -208,12 +220,15 @@ public class TransmisionController {
             ppgRaw = lastPpgRaw;
         }
 
-        shimmerDevice.getData().add(String.valueOf(ppgCal));
-        shimmerDevice.getData().add(String.valueOf(ppgRaw));
+        shimmerDevice.getData().set(pos, String.valueOf(ppgCal));
+        shimmerDevice.getData().set(pos + 1, String.valueOf(ppgRaw));
 
     }
 
-    private void getDataGSRCond() {
+    /**
+     * Obtiene la conductancia cruda y calcula en mSimens.
+     */
+    private void getDataGSRCond(int pos) {
         double gsrCal = Double.NaN;
         double gsrRaw = Double.NaN;
 
@@ -240,11 +255,14 @@ public class TransmisionController {
         } else {
             gsrRaw = lastGsrRawCond;
         }
-        shimmerDevice.getData().add(String.valueOf(gsrCal));
-        shimmerDevice.getData().add(String.valueOf(gsrRaw));
+        shimmerDevice.getData().set(pos, String.valueOf(gsrCal));
+        shimmerDevice.getData().set(pos + 1, String.valueOf(gsrRaw));
     }
 
-    private void getDataGsrResi() {
+    /**
+     * Obtiene la resistencia cruda y calculada en kOhms.
+     */
+    private void getDataGsrResi(int pos) {
         double gsrCal = Double.NaN;
         double gsrRaw = Double.NaN;
 
@@ -272,11 +290,14 @@ public class TransmisionController {
         } else {
             gsrRaw = lastGsrRawRes;
         }
-        shimmerDevice.getData().add(String.valueOf(gsrCal));
-        shimmerDevice.getData().add(String.valueOf(gsrRaw));
+        shimmerDevice.getData().set(pos, String.valueOf(gsrCal));
+        shimmerDevice.getData().set(pos + 1, String.valueOf(gsrRaw));
     }
 
-    private void getDataTemperatura() {
+    /**
+     * Obiene la temperatura cruda y calculada en grados Celcius.
+     */
+    private void getDataTemperatura(int pos) {
         double tempCal = Double.NaN;
         double tempRaw = Double.NaN;
 
@@ -300,12 +321,15 @@ public class TransmisionController {
         } else {
             tempRaw = lastTempRaw;
         }
-        shimmerDevice.getData().add(String.valueOf(tempCal));
-        shimmerDevice.getData().add(String.valueOf(tempRaw));
+        shimmerDevice.getData().set(pos, String.valueOf(tempCal));
+        shimmerDevice.getData().set(pos + 1, String.valueOf(tempRaw));
     }
 
-    private void addMarks() {
-        shimmerDevice.getData().add(markExp);
-        shimmerDevice.getData().add(markDinamic);
+    /**
+     * Añade las marcas a la lista de datos.
+     */
+    private void addMarks(int pos) {
+        shimmerDevice.getData().set(pos, markExp);
+        shimmerDevice.getData().set(pos + 1, markDinamic);
     }
 }

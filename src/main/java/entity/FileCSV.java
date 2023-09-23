@@ -21,6 +21,10 @@ public class FileCSV {
     private FileWriter fileWriter;
     private BufferedWriter bufferedWriter;
 
+    public String getRuta() {
+        return ruta + nombre_Archivo;
+    }
+
     /**
      * Crea la instancia del objeto para controlar en archivo CSV, requiere 2
      * parametros para poder crearlo.

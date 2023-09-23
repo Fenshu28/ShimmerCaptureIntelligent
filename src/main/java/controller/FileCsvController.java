@@ -18,7 +18,6 @@ public class FileCsvController {
     }
 
     public void saveData(List<String> data) {
-
         file.setData(data);
     }
 

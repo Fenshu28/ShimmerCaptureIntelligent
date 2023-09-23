@@ -197,7 +197,6 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                 if (onRec) {
                     transmicion_Cont.setMarkExp(markExp);
                     transmicion_Cont.setMarkDinamic(markDinamic);
-
                     transmicion_Cont.log();
                 }
                 break;
