@@ -42,6 +42,8 @@ public class TransmisionController {
     private double lastTempCal = 0;
     private double lastTempRaw = 0;
 
+    private double[] datosTemp;
+
     // Propiedades del shimmer.
     private ShimmerMsg shimmerMSG;
     private Filter lpf, hpf;
@@ -51,7 +53,7 @@ public class TransmisionController {
 
     public TransmisionController(ShimmerDispositive shimmerDevice) {
         this.shimmerDevice = shimmerDevice;
-
+        this.datosTemp = new double[8];
     }
 
     public void setFile(FileCSV file) {
@@ -72,6 +74,10 @@ public class TransmisionController {
         this.shimmerMSG = shimmerMSG;
     }
 
+    public double[] getDatosTemp() {
+        return datosTemp;
+    }
+
     public void streamData() {
 //        shimmerDevice.getData().clear();
         getTimeStamp(0); // 0 - timestamp
@@ -81,11 +87,20 @@ public class TransmisionController {
 //        getDataTemperatura(); // 5,6 - Se agrega la temperatura.
         getDataPPG(6); // 6,7 - Se agrega el PPG.
         addMarks(8);
+//        saveDataTemp();
     }
 
     public void log() {
         // Guarda los datos en el archivo
         file_Controlle.saveData(shimmerDevice.getData());
+    }
+
+    private void saveDataTemp() {
+        int i = 1;
+        for (double d : datosTemp) {
+            d = Double.parseDouble(shimmerDevice.getData().get(i));
+            i++;
+        }
     }
 
     /**
@@ -172,18 +187,20 @@ public class TransmisionController {
 
             heartRate = heartRateCalculation.ppgToHrConversion(dataArrayPPG, ppgTimeStamp);
 
-            if (heartRate == INVALID_RESULT) {
-                heartRate = Double.NaN;
-            }
-
             // Aquí guardar los datos.
-            if (heartRate == Double.NaN) {
+            if (heartRate == INVALID_RESULT) {
+//                heartRate = Double.NaN;
                 shimmerDevice.getData().set(pos, String.valueOf(lastHR));
             } else {
                 shimmerDevice.getData().set(pos, String.valueOf(heartRate));
                 lastHR = heartRate;
             }
 
+//            if (heartRate == Double.NaN) {
+//
+//            } else {
+//
+//            }
         } else {
             System.out.println("ERROR! FormatCluster is Null!");
         }

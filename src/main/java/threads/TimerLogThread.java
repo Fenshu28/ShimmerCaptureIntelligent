@@ -1,26 +1,23 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 22 sep. 2023
- * Fecha de modificación: 22 sep. 2023
- * Descripción: Clase para crear un hilo que ejecute timer para el control del
- * tiempo de conectado.
+ * Fecha de creación: 26 sep. 2023
+ * Fecha de modificación: 26 sep. 2023
+ * Descripción: Clase para un hilo que actualice un timer del tiempo de guardado.
  *********************************************** */
 package threads;
 
-import com.google.api.client.http.HttpStatusCodes;
 import controller.TimerController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import resource.StatusConection;
 import view.MainFrame;
 
-public class TimerConectThread implements Runnable {
+public class TimerLogThread implements Runnable {
 
     private TimerController timController;
     private MainFrame main_Frame;
     private boolean active = false;
 
-    public TimerConectThread(MainFrame main_Frame) {
+    public TimerLogThread(MainFrame main_Frame) {
         this.main_Frame = main_Frame;
         timController = new TimerController();
         active = true;
@@ -34,10 +31,9 @@ public class TimerConectThread implements Runnable {
     public void run() {
         while (active) {
             try {
-                if (main_Frame.getCon().getStatus().contains(
-                        StatusConection.Conectado.toString())) {
+                if (main_Frame.getCon().isOnRec()) {
                     timController.tick();
-                    main_Frame.getLbTimerConect().setText(timController.getTime());
+                    main_Frame.getLbTimerRec().setText(timController.getTime());
                     Thread.sleep(1000);
                 }
             } catch (InterruptedException ex) {
@@ -46,5 +42,4 @@ public class TimerConectThread implements Runnable {
         }
 
     }
-
 }

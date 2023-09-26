@@ -51,7 +51,7 @@
                   <Component id="jLabel2" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="pnlPrincipal" pref="447" max="32767" attributes="0"/>
+              <Component id="pnlPrincipal" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -251,7 +251,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Bateria:"/>
+                <Property name="text" type="java.lang.String" value="Bater&#xed;a:"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JProgressBar" name="barBattery">
@@ -593,11 +593,15 @@
               </Events>
             </Component>
             <Component class="javax.swing.JTextField" name="txtMarkDianam">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="A"/>
+              </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnRemoveMark">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Quitar"/>
                 <Property name="toolTipText" type="java.lang.String" value="Agregar marcador."/>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRemoveMarkActionPerformed"/>
@@ -747,7 +751,7 @@
         <Component class="javax.swing.JLabel" name="jLabel15">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="text" type="java.lang.String" value="Numero de experimento"/>
+            <Property name="text" type="java.lang.String" value="N&#xfa;mero de prueba"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

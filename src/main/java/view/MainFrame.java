@@ -20,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import threads.TimerConectThread;
+import threads.TimerLogThread;
 import threads.UpdateComponentsThread;
 
 public class MainFrame extends javax.swing.JFrame {
@@ -30,11 +31,13 @@ public class MainFrame extends javax.swing.JFrame {
     private String selectedPort;
     private UpdateComponentsThread update_Thread;
     private TimerConectThread timer_Con;
+    private TimerLogThread timer_Log;
     private FileCSV file_CSV;
 
     // Hilos
     private Thread hiloComp;
     private Thread hiloTimCon;
+    private Thread hiloTimLog;
 
     public MainFrame() {
         controllerPorts = new ActivePorts();
@@ -45,6 +48,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         btnPause.setVisible(false);
         btnStop.setVisible(false);
+        
         con.setMarkExp(txtNumExp.getText());
     }
 
@@ -184,6 +188,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void createConexion() {
         con.setDeviceComPort(selectedPort);
         con.conectar();
+
         // Hilo para actualizar componentes.
         update_Thread = new UpdateComponentsThread(this);
         hiloComp = new Thread(update_Thread);
@@ -196,6 +201,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void desconectar() {
         terminarTransmision();
+        timer_Con.setActive(false);
         con.desconectar();
     }
 
@@ -209,11 +215,20 @@ public class MainFrame extends javax.swing.JFrame {
             con.setMarkDinamic("");
             con.setMarkExp(txtNumExp.getText());
             con.guardar();
+            // Hilo para el timer de guardado.
+            timer_Log = new TimerLogThread(this);
+            hiloTimLog = new Thread(timer_Log);
+            hiloTimLog.start();
         } else {
             JOptionPane.showMessageDialog(this,
                     "Debe darle un nombre al archivo y elegir donde se guardará.",
                     "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
+    }
+
+    private void contiGuardado() {
+        warnigBattery();
+        con.contGuardar();
     }
 
     private void pausaGuardado() {
@@ -337,7 +352,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         chkHR.setText("HR");
 
-        jLabel5.setText("Bateria:");
+        jLabel5.setText("Batería:");
 
         barBattery.setStringPainted(true);
 
@@ -577,8 +592,11 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        txtMarkDianam.setText("A");
+
         btnRemoveMark.setText("Quitar");
         btnRemoveMark.setToolTipText("Agregar marcador.");
+        btnRemoveMark.setEnabled(false);
         btnRemoveMark.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRemoveMarkActionPerformed(evt);
@@ -734,7 +752,7 @@ public class MainFrame extends javax.swing.JFrame {
         pnlPrincipal.add(txtNumExp, gridBagConstraints);
 
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel15.setText("Numero de experimento");
+        jLabel15.setText("Número de prueba");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -763,7 +781,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 447, Short.MAX_VALUE))
+                .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -789,7 +807,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConectActionPerformed
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        iniciarGuardado();
+        if (!con.isOnRec()) {
+            iniciarGuardado();
+        } else {
+            contiGuardado();
+        }
     }//GEN-LAST:event_btnPlayActionPerformed
 
     private void btnPauseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPauseActionPerformed
@@ -813,6 +835,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnAddMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddMarkActionPerformed
         con.setMarkDinamic(txtMarkDianam.getText());
+        btnAddMark.setEnabled(false);
+        btnRemoveMark.setEnabled(true);
     }//GEN-LAST:event_btnAddMarkActionPerformed
 
     private void txtNameFileKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameFileKeyPressed
@@ -848,6 +872,8 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnRemoveMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveMarkActionPerformed
         con.setMarkDinamic("");
+        btnAddMark.setEnabled(true);
+        btnRemoveMark.setEnabled(false);
     }//GEN-LAST:event_btnRemoveMarkActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing

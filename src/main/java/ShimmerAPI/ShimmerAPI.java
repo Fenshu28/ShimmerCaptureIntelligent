@@ -84,6 +84,10 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
         return onRec;
     }
 
+    public TransmisionController getTransmicion_Cont() {
+        return transmicion_Cont;
+    }
+
     public void conectar() {
         transmicion_Cont = new TransmisionController(shimmerDevice);
         bluetoothManager.connectShimmerThroughCommPort(deviceComPort);
@@ -111,6 +115,10 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     public void guardar() {
         file.openFile();
         transmicion_Cont.setFile(file);
+        onRec = true;
+    }
+
+    public void contGuardar() {
         onRec = true;
     }
 

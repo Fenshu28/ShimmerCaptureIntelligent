@@ -13,12 +13,10 @@ import view.MainFrame;
 
 public final class UpdateComponentsThread implements Runnable {
 
-    private MainFrame main_Frame;
+    private final MainFrame main_Frame;
     private boolean active;
     private String lastConnStatus = new String();
     private String connStatus = new String();
-    private String lastConnStatusStream = new String();
-    private String connStatusStream = new String();
     private boolean lastStatusRecord = false;
     private boolean statusRecord = false;
     private int batteryLevel;
@@ -41,7 +39,7 @@ public final class UpdateComponentsThread implements Runnable {
     public void run() {
         while (isActive()) {
             connStatus = main_Frame.getCon().getStatus();
-            connStatusStream = main_Frame.getCon().getStatus_Stream();
+            main_Frame.getCon().getStatus_Stream();
             statusRecord = main_Frame.getCon().isOnRec();
 
             // Procesos que ejecutará solo si el estado cambia.
@@ -69,7 +67,6 @@ public final class UpdateComponentsThread implements Runnable {
                 updateLabelStatusBattery();
             }
             lastConnStatus = connStatus;
-            lastConnStatusStream = connStatusStream;
             lastStatusRecord = statusRecord;
         }
     }
@@ -155,14 +152,14 @@ public final class UpdateComponentsThread implements Runnable {
 
     private void updateDataLabel() {
         try {
-            main_Frame.getLbGsrCond().setText(main_Frame.getCon().getShimmerDevice()
-                    .getData().get(1) + " mSimens");
-            main_Frame.getLbGsrRes().setText(main_Frame.getCon().getShimmerDevice()
-                    .getData().get(3) + " KOhms");
-            main_Frame.getLbHR().setText(main_Frame.getCon().getShimmerDevice()
-                    .getData().get(5) + " Beats/min.");
-            main_Frame.getLbPpg().setText(main_Frame.getCon().getShimmerDevice()
-                    .getData().get(6) + " mVolts"); // Se debe cambiar por 7.
+            main_Frame.getLbGsrCond().setText(main_Frame.getCon().
+                    getShimmerDevice().getData().get(1) + " mSimens");
+            main_Frame.getLbGsrRes().setText(main_Frame.getCon().
+                    getShimmerDevice().getData().get(3) + " KOhms");
+            main_Frame.getLbHR().setText(main_Frame.getCon().
+                    getShimmerDevice().getData().get(5) + " Beats/min.");
+            main_Frame.getLbPpg().setText(main_Frame.getCon().
+                    getShimmerDevice().getData().get(6) + " mVolts"); // Se debe cambiar por 7.
         } catch (Exception e) {
             System.out.println("nopi");
         }
