@@ -19,6 +19,7 @@ import entity.FileCSV;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import resource.StatusLog;
 import threads.TimerConectThread;
 import threads.TimerLogThread;
 import threads.UpdateComponentsThread;
@@ -807,7 +808,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConectActionPerformed
 
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        if (!con.isOnRec()) {
+        if (con.getStatus_Log().contains(StatusLog.Stop.toString())) {
             iniciarGuardado();
         } else {
             contiGuardado();

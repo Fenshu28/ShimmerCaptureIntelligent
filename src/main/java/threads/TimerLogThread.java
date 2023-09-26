@@ -9,6 +9,7 @@ package threads;
 import controller.TimerController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import resource.StatusLog;
 import view.MainFrame;
 
 public class TimerLogThread implements Runnable {
@@ -31,7 +32,8 @@ public class TimerLogThread implements Runnable {
     public void run() {
         while (active) {
             try {
-                if (main_Frame.getCon().isOnRec()) {
+                if (main_Frame.getCon().getStatus_Log().contains(
+                        StatusLog.Play.toString())) {
                     timController.tick();
                     main_Frame.getLbTimerRec().setText(timController.getTime());
                     Thread.sleep(1000);

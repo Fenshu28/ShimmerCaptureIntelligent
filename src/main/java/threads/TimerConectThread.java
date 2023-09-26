@@ -34,12 +34,13 @@ public class TimerConectThread implements Runnable {
     public void run() {
         while (active) {
             try {
-                if (main_Frame.getCon().getStatus().contains(
-                        StatusConection.Conectado.toString())) {
+                if (main_Frame.getCon().getStatus_Stream().equals(
+                        StatusConection.Transmitiendo.toString())) {
+                    System.out.println("tick");
                     timController.tick();
                     main_Frame.getLbTimerConect().setText(timController.getTime());
-                    Thread.sleep(1000);
                 }
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(TimerConectThread.class.getName()).log(Level.SEVERE, null, ex);
             }

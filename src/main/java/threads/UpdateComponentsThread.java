@@ -9,6 +9,7 @@ package threads;
 
 import java.awt.Color;
 import resource.StatusConection;
+import resource.StatusLog;
 import view.MainFrame;
 
 public final class UpdateComponentsThread implements Runnable {
@@ -17,8 +18,8 @@ public final class UpdateComponentsThread implements Runnable {
     private boolean active;
     private String lastConnStatus = new String();
     private String connStatus = new String();
-    private boolean lastStatusRecord = false;
-    private boolean statusRecord = false;
+    private String lastStatusRecord = new String();
+    private String statusRecord = new String();
     private int batteryLevel;
     private int lastBatteryLevel = 101;
 
@@ -40,21 +41,21 @@ public final class UpdateComponentsThread implements Runnable {
         while (isActive()) {
             connStatus = main_Frame.getCon().getStatus();
             main_Frame.getCon().getStatus_Stream();
-            statusRecord = main_Frame.getCon().isOnRec();
+            statusRecord = main_Frame.getCon().getStatus_Log();
 
             // Procesos que ejecutará solo si el estado cambia.
             if (!lastConnStatus.equals(connStatus)) {
                 updateLabelConn();
                 updateButtonsConn();
             }
-            if (lastStatusRecord != statusRecord) {
+            if (!lastStatusRecord.equals(statusRecord)) {
                 updateButtonsRec();
             }
 
             // Procesos si el estado es uno especifico
-            if (!statusRecord) {
+            if (statusRecord.contains(StatusLog.Stop.toString())) {
                 updateFileProp(true);
-            } else {
+            } else if (statusRecord.contains(StatusLog.Play.toString())) {
 
                 updateFileProp(false);
             }
@@ -130,7 +131,7 @@ public final class UpdateComponentsThread implements Runnable {
     }
 
     public void updateButtonsRec() {
-        if (statusRecord) {
+        if (statusRecord.contains(StatusLog.Play.toString())) {
             setActiveButtonsRec(false);
         } else {
             setActiveButtonsRec(true);

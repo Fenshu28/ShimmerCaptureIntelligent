@@ -16,6 +16,7 @@ import controller.TransmisionController;
 import entity.FileCSV;
 import entity.ShimmerDispositive;
 import resource.StatusConection;
+import resource.StatusLog;
 
 public class ShimmerAPI extends BasicProcessWithCallBack {
 
@@ -23,11 +24,12 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     static BasicShimmerBluetoothManagerPc bluetoothManager
             = new BasicShimmerBluetoothManagerPc();
     private boolean mConfigureOnFirstTime = true;
-    private boolean onRec = false;
+//    private boolean onRec = false;
     // Propiedades del cliente
     private String deviceComPort = new String();
     private String status;
     private String status_Stream;
+    private String status_Log;
     private FileCSV file;
     private String markExp;
     private String markDinamic;
@@ -36,8 +38,9 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     private TransmisionController transmicion_Cont;
 
     public ShimmerAPI() {
-        this.status = "Desconectado";
-        this.status_Stream = "Stop";
+        this.status = StatusConection.Desconectado.toString();
+        this.status_Stream = StatusConection.Parado.toString();
+        this.status_Log = StatusLog.Stop.toString();
     }
 
     public String getMarkExp() {
@@ -80,10 +83,13 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
         this.file = file;
     }
 
-    public boolean isOnRec() {
-        return onRec;
+    public String getStatus_Log() {
+        return status_Log;
     }
 
+//    public boolean isOnRec() {
+//        return onRec;
+//    }
     public TransmisionController getTransmicion_Cont() {
         return transmicion_Cont;
     }
@@ -115,19 +121,19 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     public void guardar() {
         file.openFile();
         transmicion_Cont.setFile(file);
-        onRec = true;
+        status_Log = StatusLog.Play.toString();
     }
 
     public void contGuardar() {
-        onRec = true;
+        status_Log = StatusLog.Play.toString();
     }
 
     public void cerrarGuardar() {
-        onRec = false;
+        status_Log = StatusLog.Pause.toString();
     }
 
     public void terminarGuardado() {
-        cerrarGuardar();
+        status_Log = StatusLog.Stop.toString();
         file.closeFile();
     }
 
@@ -202,7 +208,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                 transmicion_Cont.setShimmerMSG(shimmerMSG);
                 transmicion_Cont.streamData();
 
-                if (onRec) {
+                if (status_Log.contains(StatusLog.Play.toString())) {
                     transmicion_Cont.setMarkExp(markExp);
                     transmicion_Cont.setMarkDinamic(markDinamic);
                     transmicion_Cont.log();
