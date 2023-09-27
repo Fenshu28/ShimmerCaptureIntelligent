@@ -7,7 +7,6 @@
  *********************************************** */
 package threads;
 
-import com.google.api.client.http.HttpStatusCodes;
 import controller.TimerController;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,7 +35,6 @@ public class TimerConectThread implements Runnable {
             try {
                 if (main_Frame.getCon().getStatus_Stream().equals(
                         StatusConection.Transmitiendo.toString())) {
-                    System.out.println("tick");
                     timController.tick();
                     main_Frame.getLbTimerConect().setText(timController.getTime());
                 }

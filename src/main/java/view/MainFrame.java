@@ -19,13 +19,15 @@ import entity.FileCSV;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import resource.StatusConection;
 import resource.StatusLog;
 import threads.TimerConectThread;
 import threads.TimerLogThread;
 import threads.UpdateComponentsThread;
+import threads.UpdateLabelDataThread;
 
 public class MainFrame extends javax.swing.JFrame {
-
+    
     private final ShimmerAPI con;
     private final ActivePorts controllerPorts;
     private List<Port> portsEnables;
@@ -33,114 +35,116 @@ public class MainFrame extends javax.swing.JFrame {
     private UpdateComponentsThread update_Thread;
     private TimerConectThread timer_Con;
     private TimerLogThread timer_Log;
+    private UpdateLabelDataThread upLabelData_Thread;
     private FileCSV file_CSV;
 
     // Hilos
     private Thread hiloComp;
     private Thread hiloTimCon;
     private Thread hiloTimLog;
-
+    private Thread hiloLabelData;
+    
     public MainFrame() {
         controllerPorts = new ActivePorts();
         portsEnables = new ArrayList<>();
         initComponents();
         fillComponents();
         con = new ShimmerAPI();
-
+        
         btnPause.setVisible(false);
         btnStop.setVisible(false);
         
         con.setMarkExp(txtNumExp.getText());
     }
-
+    
     public ShimmerAPI getCon() {
         return con;
     }
-
+    
     public JLabel getLbEstado() {
         return lbEstadoCon;
     }
-
+    
     public JProgressBar getBarBattery() {
         return barBattery;
     }
-
+    
     public JButton getBtnConect() {
         return btnConect;
     }
-
+    
     public JButton getBtnDisconect() {
         return btnDisconect;
     }
-
+    
     public JButton getBtnPause() {
         return btnPause;
     }
-
+    
     public JButton getBtnPlay() {
         return btnPlay;
     }
-
+    
     public JButton getBtnStop() {
         return btnStop;
     }
-
+    
     public JRadioButton getChkGSR() {
         return chkGsrCond;
     }
-
+    
     public JRadioButton getChkPPG() {
         return chkHR;
     }
-
+    
     public JRadioButton getChkGsrCond() {
         return chkGsrCond;
     }
-
+    
     public JRadioButton getChkGsrRes() {
         return chkGsrRes;
     }
-
+    
     public JRadioButton getChkHR() {
         return chkHR;
     }
-
+    
     public JLabel getLbGsrCond() {
         return lbGsrCond;
     }
-
+    
     public JLabel getLbGsrRes() {
         return lbGsrRes;
     }
-
+    
     public JLabel getLbHR() {
         return lbHR;
     }
-
+    
     public JLabel getLbPpg() {
         return lbPpg;
     }
-
+    
     public JButton getBtnChoosePathFile() {
         return btnChoosePathFile;
     }
-
+    
     public JPanel getPnlDatosPaciente() {
         return pnlDatosPaciente;
     }
-
+    
     public JTextField getTxtNameFile() {
         return txtNameFile;
     }
-
+    
     public JLabel getLbEstadoBatt() {
         return lbEstadoBatt;
     }
-
+    
     public JLabel getLbTimerConect() {
         return lbTimerConect;
     }
-
+    
     public JLabel getLbTimerRec() {
         return lbTimerRec;
     }
@@ -198,18 +202,23 @@ public class MainFrame extends javax.swing.JFrame {
         timer_Con = new TimerConectThread(this);
         hiloTimCon = new Thread(timer_Con);
         hiloTimCon.start();
+        // Hilo para actualizar los label de datos
+        upLabelData_Thread = new UpdateLabelDataThread(this);
+        hiloLabelData = new Thread(upLabelData_Thread);
+        hiloLabelData.start();
     }
-
+    
     private void desconectar() {
         terminarTransmision();
         timer_Con.setActive(false);
+        upLabelData_Thread.setActive(false);
         con.desconectar();
     }
-
+    
     private void terminarTransmision() {
         con.destransmitir();
     }
-
+    
     private void iniciarGuardado() {
         if (file_CSV != null) {
             warnigBattery();
@@ -226,20 +235,20 @@ public class MainFrame extends javax.swing.JFrame {
                     "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }
-
+    
     private void contiGuardado() {
         warnigBattery();
         con.contGuardar();
     }
-
+    
     private void pausaGuardado() {
         con.cerrarGuardar();
     }
-
+    
     private void pararGuardado() {
         con.terminarGuardado();
     }
-
+    
     private void warnigBattery() {
         if (con.getShimmerDevice().checkBatteryLevel() == 1) {
             JOptionPane.showMessageDialog(this, """
@@ -249,7 +258,7 @@ public class MainFrame extends javax.swing.JFrame {
                     JOptionPane.WARNING_MESSAGE);
         }
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -794,7 +803,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void cmbPortsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPortsActionPerformed
-
+        
         if (cmbPorts.getItemCount() > 0) {
             selectedPort = portsEnables.get(
                     cmbPorts.getSelectedIndex()).getNombre();
@@ -855,7 +864,7 @@ public class MainFrame extends javax.swing.JFrame {
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         // Mostrar el cuadro de diálogo para seleccionar una ruta o archivo
         int returnValue = fileChooser.showOpenDialog(this);
-
+        
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             // Obtener la ruta selecionada
             File selectedFile = fileChooser.getSelectedFile();
@@ -878,9 +887,10 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRemoveMarkActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        desconectar();
+        if (con.getStatus().contains(StatusConection.Conectado.toString()))
+            desconectar();
     }//GEN-LAST:event_formWindowClosing
-
+    
     public static void main(String args[]) {
         try {
             UIManager.setLookAndFeel(new FlatArcOrangeIJTheme());

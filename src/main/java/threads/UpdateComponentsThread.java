@@ -61,7 +61,7 @@ public final class UpdateComponentsThread implements Runnable {
             }
 
 //            if (connStatusStream.equals(StatusConection.Transmitiendo.toString())) {
-            updateDataLabel();
+//            updateDataLabel();
 //            }
             if (connStatus.contains(StatusConection.Conectado.toString())) {
 //                    updateBarBattery();
@@ -151,20 +151,7 @@ public final class UpdateComponentsThread implements Runnable {
         main_Frame.getBtnStop().setVisible(!flag);
     }
 
-    private void updateDataLabel() {
-        try {
-            main_Frame.getLbGsrCond().setText(main_Frame.getCon().
-                    getShimmerDevice().getData().get(1) + " mSimens");
-            main_Frame.getLbGsrRes().setText(main_Frame.getCon().
-                    getShimmerDevice().getData().get(3) + " KOhms");
-            main_Frame.getLbHR().setText(main_Frame.getCon().
-                    getShimmerDevice().getData().get(5) + " Beats/min.");
-            main_Frame.getLbPpg().setText(main_Frame.getCon().
-                    getShimmerDevice().getData().get(6) + " mVolts"); // Se debe cambiar por 7.
-        } catch (Exception e) {
-            System.out.println("nopi");
-        }
-    }
+    
 
     private void updateFileProp(boolean flag) {
         if (main_Frame.getTxtNameFile().getText().isEmpty()) {
