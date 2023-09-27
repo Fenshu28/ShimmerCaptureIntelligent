@@ -36,7 +36,7 @@ public class UpdateLabelDataThread implements Runnable {
                 if (main_Frame.getCon().getStatus_Stream().contains(
                         StatusConection.Transmitiendo.toString())) {
                     updateDataLabel();
-                    System.out.println("tick");
+//                    System.out.println("tick");
                 }
                 Thread.sleep(1000);
             } catch (InterruptedException ex) {
@@ -46,16 +46,16 @@ public class UpdateLabelDataThread implements Runnable {
     }
     private void updateDataLabel() {
         try {
-            System.out.println(main_Frame.getCon().
-                    getShimmerDevice().getData().get(1) + " mSimens");
-//            main_Frame.getLbGsrCond().setText(main_Frame.getCon().
+//            System.out.println(main_Frame.getCon().
 //                    getShimmerDevice().getData().get(1) + " mSimens");
-//            main_Frame.getLbGsrRes().setText(main_Frame.getCon().
-//                    getShimmerDevice().getData().get(3) + " KOhms");
-//            main_Frame.getLbHR().setText(main_Frame.getCon().
-//                    getShimmerDevice().getData().get(5) + " Beats/min.");
-//            main_Frame.getLbPpg().setText(main_Frame.getCon().
-//                    getShimmerDevice().getData().get(6) + " mVolts"); // Se debe cambiar por 7.
+            main_Frame.getLbGsrCond().setText(main_Frame.getCon().
+                    getShimmerDevice().getData().get(1) + " mSimens");
+            main_Frame.getLbGsrRes().setText(main_Frame.getCon().
+                    getShimmerDevice().getData().get(3) + " KOhms");
+            main_Frame.getLbHR().setText(main_Frame.getCon().
+                    getShimmerDevice().getData().get(5) + " Beats/min.");
+            main_Frame.getLbPpg().setText(main_Frame.getCon().
+                    getShimmerDevice().getData().get(6) + " mVolts"); // Se debe cambiar por 7.
         } catch (Exception e) {
             System.out.println("nopi");
         }

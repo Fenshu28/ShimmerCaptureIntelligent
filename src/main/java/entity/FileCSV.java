@@ -33,7 +33,7 @@ public class FileCSV {
      * @param nombre_Archivo Nombre del archivo.
      */
     public FileCSV(String ruta, String nombre_Archivo) {
-        this.ruta = ruta;
+        this.ruta = ruta + "\\";
         this.nombre_Archivo = nombre_Archivo;
     }
 
@@ -50,7 +50,7 @@ public class FileCSV {
         // Formatear la fecha y hora actual
         String fechaHoraFormateada = formato.format(fechaHoraActual);
         try {
-            fileWriter = new FileWriter(ruta + "\\" + nombre_Archivo
+            fileWriter = new FileWriter(ruta + nombre_Archivo
                     + "_" + fechaHoraFormateada + ".csv");
             bufferedWriter = new BufferedWriter(fileWriter);
         } catch (Exception e) {

@@ -36,8 +36,8 @@ public class TimerLogThread implements Runnable {
                         StatusLog.Play.toString())) {
                     timController.tick();
                     main_Frame.getLbTimerRec().setText(timController.getTime());
-                    Thread.sleep(1000);
                 }
+                Thread.sleep(1000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(TimerConectThread.class.getName()).log(Level.SEVERE, null, ex);
             }

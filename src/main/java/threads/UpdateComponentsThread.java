@@ -151,8 +151,6 @@ public final class UpdateComponentsThread implements Runnable {
         main_Frame.getBtnStop().setVisible(!flag);
     }
 
-    
-
     private void updateFileProp(boolean flag) {
         if (main_Frame.getTxtNameFile().getText().isEmpty()) {
             main_Frame.getBtnChoosePathFile().setEnabled(!flag);
