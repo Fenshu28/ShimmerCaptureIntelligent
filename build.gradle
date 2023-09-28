@@ -1,24 +1,26 @@
 plugins {
-    id 'java'
+     id 'application'
 }
 
 group = 'org.example'
 version = '1.0.0'
 
-defaultTasks 'jar'
-
-jar {
-    duplicatesStrategy = 'EXCLUDE'
-    
-    from {
-        (configurations.runtimeClasspath).collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    }    
-    manifest {
-        attributes 'Main-Class': 'mainPack.Main'
-    }
+application {
+    mainClass = 'mainPack.Main' 
 }
+
+//jar {
+  //  duplicatesStrategy = 'EXCLUDE'
+    
+//    from {
+  //      (configurations.runtimeClasspath).collect {
+    //        it.isDirectory() ? it : zipTree(it)
+      //  }
+    //}    
+    //manifest {
+      //  attributes 'Main-Class': 'mainPack.Main'
+    //}
+//}
 
 repositories {
     jcenter()
@@ -56,6 +58,6 @@ dependencies {
     implementation name: 'jSerialComm-2.10.3'    
 }
 
-test {
-    useJUnitPlatform()
+tasks.named('test') {
+    useJUnitPlatform() 
 }
