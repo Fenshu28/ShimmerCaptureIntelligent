@@ -3,24 +3,36 @@ plugins {
 }
 
 group = 'org.example'
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
 
-repositories {jcenter()
+defaultTasks 'jar'
+
+jar {
+    duplicatesStrategy = 'EXCLUDE'
+    
+    from {
+        (configurations.runtimeClasspath).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }    
+    manifest {
+        attributes 'Main-Class': 'mainPack.Main'
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
     flatDir {
         dirs 'libs'
     }
     maven {
         name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ShimmerEngineering/Shimmer-Java-Android-API")
-            credentials {
-                //username = "Fenshu28"
-                //password = ""
-            //username = project.findProperty("usr") ?: System.getenv("USERNAME")
-            //password = project.findProperty("key") ?: System.getenv("TOKEN")
+        url = uri("https://maven.pkg.github.com/ShimmerEngineering/Shimmer-Java-Android-API")
+        credentials {
             username = System.getenv("usr")
-            password = System.getenv("key")
-            
-}
+            password = System.getenv("key")           
+        }
     }
 }
 
