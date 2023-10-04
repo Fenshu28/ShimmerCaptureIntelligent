@@ -1,7 +1,7 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 26 sep. 2023
- * Descripción: Clase para crear un hilo que actualice los datos de los sensores
+ * Fecha de creaciÃ³n: 26 sep. 2023
+ * DescripciÃ³n: Clase para crear un hilo que actualice los datos de los sensores
  * en el frame.
  *********************************************** */
 package threads;

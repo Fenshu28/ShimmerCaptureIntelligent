@@ -1,7 +1,7 @@
 /** **********************************************
  * Autores: Cristopher Alexis Zarate Valencia  
- * Fecha de creación: 26 sep. 2023
- * Descripción: Enum para los estados de conexión.
+ * Fecha de creaciÃ³n: 26 sep. 2023
+ * DescripciÃ³n: Enum para los estados de conexiÃ³n.
  *********************************************** */
 package resource;
 

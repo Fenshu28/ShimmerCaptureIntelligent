@@ -7,11 +7,11 @@ package entity;
 public class Port {
     private String nombre;
     private String dispositivo;
-    private String descripción;
+    private String descripcion;
 
-    public Port(String nombre, String descripción) {
+    public Port(String nombre, String descripcion) {
         this.nombre = nombre;
-        this.descripción = descripción;
+        this.descripcion = descripcion;
     }
 
     public String getNombre() {
@@ -30,11 +30,11 @@ public class Port {
         this.dispositivo = dispositivo;
     }
 
-    public String getDescripción() {
-        return descripción;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setDescripción(String descripción) {
-        this.descripción = descripción;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }

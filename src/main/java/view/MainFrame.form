@@ -63,7 +63,7 @@
           <Font name="Lucida Fax" size="24" style="1"/>
         </Property>
         <Property name="horizontalAlignment" type="int" value="0"/>
-        <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;&lt;style&gt;&#xa;      p {color:orange;text-align:center;}&#xa;    &lt;/style&gt;&#xa;&lt;p&gt;Cuerpo acad&#xe9;mico de &lt;br&gt; &#xa;sistemas computacionales Inteligentes&lt;p&gt;&#xa;&lt;/html&gt;" noResource="true"/>
+        <Property name="text" type="java.lang.String" value="&lt;html&gt; &lt;style&gt;       p {color:orange;text-align:center;}     &lt;/style&gt; &lt;p&gt;Cuerpo acad&#xe9;mico de &lt;br&gt;  sistemas computacionales Inteligentes&lt;p&gt; &lt;/html&gt;" noResource="true"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">

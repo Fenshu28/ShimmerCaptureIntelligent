@@ -1,8 +1,8 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 18 sep. 2023
- * Fecha de modificación: 18 sep. 2023
- * Descripción: Clase para controllar la transmisión.
+ * Fecha de creaciÃ³n: 18 sep. 2023
+ * Fecha de modificaciÃ³n: 18 sep. 2023
+ * DescripciÃ³n: Clase para controllar la transmisiÃ³n.
  *********************************************** */
 package controller;
 
@@ -187,7 +187,7 @@ public class TransmisionController {
 
             heartRate = heartRateCalculation.ppgToHrConversion(dataArrayPPG, ppgTimeStamp);
 
-            // Aquí guardar los datos.
+            // AquÃ­ guardar los datos.
             if (heartRate == INVALID_RESULT) {
 //                heartRate = Double.NaN;
                 shimmerDevice.getData().set(pos, String.valueOf(lastHR));
@@ -343,7 +343,7 @@ public class TransmisionController {
     }
 
     /**
-     * Añade las marcas a la lista de datos.
+     * AÃ±ade las marcas a la lista de datos.
      */
     private void addMarks(int pos) {
         shimmerDevice.getData().set(pos, markExp);

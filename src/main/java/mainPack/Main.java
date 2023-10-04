@@ -1,7 +1,7 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 27 sep. 2023
- * Descripción: Clase principal.
+ * Fecha de creaciÃ³n: 27 sep. 2023
+ * DescripciÃ³n: Clase principal.
  *********************************************** */
 
 package mainPack;

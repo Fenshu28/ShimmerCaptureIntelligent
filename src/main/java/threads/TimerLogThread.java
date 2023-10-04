@@ -1,8 +1,8 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 26 sep. 2023
- * Fecha de modificación: 26 sep. 2023
- * Descripción: Clase para un hilo que actualice un timer del tiempo de guardado.
+ * Fecha de creaciÃ³n: 26 sep. 2023
+ * Fecha de modificaciÃ³n: 26 sep. 2023
+ * DescripciÃ³n: Clase para un hilo que actualice un timer del tiempo de guardado.
  *********************************************** */
 package threads;
 

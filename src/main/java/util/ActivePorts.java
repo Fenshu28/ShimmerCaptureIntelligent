@@ -15,7 +15,7 @@ public class ActivePorts {
     }
 
     /**
-     * Método encargado de cargar los puertos seriales que esten activos en el
+     * MÃ©todo encargado de cargar los puertos seriales que esten activos en el
      * sistema, guardandolos en la lista {@link ports} de tipo {@link Port}.
      */
     private void loadPorts() {
@@ -36,14 +36,14 @@ public class ActivePorts {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "No se pudieron cargarlos puertos por: " + e.getMessage(),
-                    "¡Error inesperado!",
+                    "Â¡Error inesperado!",
                     JOptionPane.ERROR_MESSAGE);
         }
 
     }
 
     /**
-     * Método para obtener el nombre del dispositivo que esta usando un
+     * MÃ©todo para obtener el nombre del dispositivo que esta usando un
      * determinado puerto.
      *
      * @param puertoSerialNombre Puerto para analizar.
@@ -54,7 +54,7 @@ public class ActivePorts {
         if (puertoSerial.openPort()) {
             System.out.println("Puerto serial abierto: " + puertoSerial.getSystemPortName());
 
-            // Envía un comando al dispositivo para obtener información
+            // EnvÃ­a un comando al dispositivo para obtener informaciÃ³n
             String comando = "ObtenerInformacion\r\n"; // Reemplaza con el comando adecuado
             puertoSerial.writeBytes(comando.getBytes(), comando.length());
 

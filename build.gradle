@@ -1,5 +1,5 @@
 plugins {
-     id 'application'
+    id 'application'
 }
 
 group = 'org.example'
@@ -7,6 +7,10 @@ version = '1.0.0'
 
 application {
     mainClass = 'mainPack.Main' 
+}
+
+compileJava { 
+    options.encoding = "UTF-8" 
 }
 
 repositories {
@@ -36,3 +40,6 @@ dependencies {
     implementation name: 'flatlaf-swingx-3.1.1'
     implementation name: 'jSerialComm-2.10.3'    
 }
+
+
+

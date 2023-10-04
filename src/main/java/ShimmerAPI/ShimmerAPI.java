@@ -1,8 +1,8 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creaci髇: 15-09-2023
- * Fecha de modificaci髇: 15-09-2023
- * Descripci髇: Clase para crear administrar la conexi髇 con el dispositivo
+ * Fecha de creaci贸n: 15-09-2023
+ * Fecha de modificaci贸n: 15-09-2023
+ * Descripci贸n: Clase para crear administrar la conexi贸n con el dispositivo
  * Shimmer.
  *********************************************** */
 package ShimmerAPI;
@@ -105,14 +105,14 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     }
 
     /**
-     * Comieza la transmici髇 de paquetes en el Shimmer.
+     * Comieza la transmici贸n de paquetes en el Shimmer.
      */
     public void transmitir() {
         shimmerDevice.getDevice().startStreaming();
     }
 
     /**
-     * Para la transmisici髇 de paquetes en el Shimmer.
+     * Para la transmisici贸n de paquetes en el Shimmer.
      */
     public void destransmitir() {
         shimmerDevice.getDevice().stopStreaming();
@@ -172,7 +172,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                         case DISCONNECTED:
                             status = "Desconectado";
                         case CONNECTION_LOST:
-                            status = "Desconectado";//"Conexi髇 perdida";
+                            status = "Desconectado";//"Conexi贸n perdida";
                             break;
                         default:
                             break;
@@ -190,12 +190,12 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                         System.out.println("status stream: " + status_Stream);
                         transmitir();
                         break;
-                    case ShimmerPC.NOTIFICATION_SHIMMER_STOP_STREAMING: // Parando transmisi髇
+                    case ShimmerPC.NOTIFICATION_SHIMMER_STOP_STREAMING: // Parando transmisi贸n
                         status_Stream = StatusConection.Parado.toString();
                         System.out.println("status stream: " + status_Stream);
 
                         break;
-                    case ShimmerPC.NOTIFICATION_SHIMMER_START_STREAMING: // Iniciando transmisi髇.
+                    case ShimmerPC.NOTIFICATION_SHIMMER_START_STREAMING: // Iniciando transmisi贸n.
                         status_Stream = StatusConection.Transmitiendo.toString();
                         System.out.println("status stream: " + status_Stream);
                         break;

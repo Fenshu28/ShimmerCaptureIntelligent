@@ -159,21 +159,21 @@ public class MainFrame extends javax.swing.JFrame {
 
     /**
      * Lee los puertos obtenidos en la lista de tipo {@link Port}, para obtener
-     * solo su descripción y mostrarla en el ComboBox de los puertos.
+     * solo su descripcion y mostrarla en el ComboBox de los puertos.
      */
     private void loadPortsComm() {
         List<String> listPornames = new ArrayList<>();
         portsEnables = controllerPorts.getPorts();
         for (Port portsEnable : portsEnables) {
-            listPornames.add(portsEnable.getDescripción());
+            listPornames.add(portsEnable.getDescripcion());
         }
         fillCombo(cmbPorts, listPornames);
     }
 
     /**
-     * Método para llenar un ComboBox con datos de una lista de cadenas.
+     * MÃ©todo para llenar un ComboBox con datos de una lista de cadenas.
      *
-     * @param combo ComboBox que se llenará
+     * @param combo ComboBox que se llenarÃ¡
      * @param lista Lista de elementos para insertar en el ComboBox.
      */
     private void fillCombo(JComboBox<String> combo, List<String> lista) {
@@ -188,7 +188,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     /**
-     * Crea la conexión con el dispositivo Shimmer y inicia el hilo para
+     * Crea la conexiÃ³n con el dispositivo Shimmer y inicia el hilo para
      * actualizar los componentes del frame segun el estado.
      */
     private void createConexion() {
@@ -199,7 +199,7 @@ public class MainFrame extends javax.swing.JFrame {
         update_Thread = new UpdateComponentsThread(this);
         hiloComp = new Thread(update_Thread);
         hiloComp.start();
-        // Hilo para el timer de conexión.
+        // Hilo para el timer de conexiÃ³n.
         timer_Con = new TimerConectThread(this);
         hiloTimCon = new Thread(timer_Con);
         hiloTimCon.start();
@@ -232,7 +232,7 @@ public class MainFrame extends javax.swing.JFrame {
             hiloTimLog.start();
         } else {
             JOptionPane.showMessageDialog(this,
-                    "Debe darle un nombre al archivo y elegir donde se guardará.",
+                    "Debe darle un nombre al archivo y elegir donde se guardarÃ¡.",
                     "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -254,8 +254,8 @@ public class MainFrame extends javax.swing.JFrame {
         if (con.getShimmerDevice().checkBatteryLevel() == 0) {
             JOptionPane.showMessageDialog(this, """
                                             Nivel de bateria menor al 20%
-                                            Conecta tu dispositivo Shimmer a una fuente de alimentación""",
-                    "Advertencia de batería baja",
+                                            Conecta tu dispositivo Shimmer a una fuente de alimentaciÃ³n""",
+                    "Advertencia de baterÃ­a baja",
                     JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -330,12 +330,12 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Lucida Fax", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("<html>\n<style>\n      p {color:orange;text-align:center;}\n    </style>\n<p>Cuerpo académico de <br> \nsistemas computacionales Inteligentes<p>\n</html>"); // NOI18N
+        jLabel1.setText("<html> <style>       p {color:orange;text-align:center;}     </style> <p>Cuerpo acadÃ©mico de <br>  sistemas computacionales Inteligentes<p> </html>"); // NOI18N
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("logo");
 
-        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuración del experimento"));
+        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder("ConfiguraciÃ³n del experimento"));
         pnlPrincipal.setFont(new java.awt.Font("Franklin Gothic Medium", 0, 14)); // NOI18N
         java.awt.GridBagLayout pnlPrincipalLayout = new java.awt.GridBagLayout();
         pnlPrincipalLayout.columnWidths = new int[] {0, 5, 0, 5, 0};
@@ -364,7 +364,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         chkHR.setText("HR");
 
-        jLabel5.setText("Batería:");
+        jLabel5.setText("BaterÃ­a:");
 
         barBattery.setStringPainted(true);
 
@@ -375,7 +375,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel11.setText("Estado de conexión:");
+        jLabel11.setText("Estado de conexiÃ³n:");
 
         lbEstadoCon.setBackground(new java.awt.Color(102, 102, 102));
         lbEstadoCon.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
@@ -511,15 +511,15 @@ public class MainFrame extends javax.swing.JFrame {
 
         cmbSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M", "F" }));
 
-        jLabel7.setText("Carrera/Profesión");
+        jLabel7.setText("Carrera/ProfesiÃ³n");
 
         jLabel8.setText("Semestre");
 
-        cmbSemestre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "Primero", "Segundo", "Tercero", "Cuarto", "Quinto", "Sexto", "Octavo", "Noveno", "Décimo" }));
+        cmbSemestre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "Primero", "Segundo", "Tercero", "Cuarto", "Quinto", "Sexto", "Octavo", "Noveno", "DÃ©cimo" }));
 
         jLabel13.setText("Procedencia");
 
-        cmbProcedencia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sierra Sur", "Cañada", "Costa", "Istmo", "Mixteca", "Papaloapan", "Sierra Norte", "Valles Centrales" }));
+        cmbProcedencia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sierra Sur", "CaÃ±ada", "Costa", "Istmo", "Mixteca", "Papaloapan", "Sierra Norte", "Valles Centrales" }));
 
         javax.swing.GroupLayout pnlDatosPacienteLayout = new javax.swing.GroupLayout(pnlDatosPaciente);
         pnlDatosPaciente.setLayout(pnlDatosPacienteLayout);
@@ -698,7 +698,7 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         pnlPrincipal.add(pnlBotnes, gridBagConstraints);
 
-        pnlTransmision.setBorder(javax.swing.BorderFactory.createTitledBorder("Transmisión"));
+        pnlTransmision.setBorder(javax.swing.BorderFactory.createTitledBorder("TransmisiÃ³n"));
 
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Tiempo conectado:");
@@ -767,7 +767,7 @@ public class MainFrame extends javax.swing.JFrame {
         pnlPrincipal.add(txtNumExp, gridBagConstraints);
 
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel15.setText("Número de prueba");
+        jLabel15.setText("NÃºmero de prueba");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -848,7 +848,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
 //        terminarTransmision();
         if (JOptionPane.showConfirmDialog(this,
-                "¿Estas seguro que deseas terminar la prueba?",
+                "ï¿½Estas seguro que deseas terminar la prueba?",
                 "Terminando prueba", JOptionPane.YES_NO_OPTION) == 1) {
             pararGuardado();
             btnPlay.setText("Iniciar experimeto");
@@ -883,7 +883,7 @@ public class MainFrame extends javax.swing.JFrame {
                 FileSystemView.getFileSystemView().
                         getFileSystemView().getHomeDirectory());
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        // Mostrar el cuadro de diálogo para seleccionar una ruta o archivo
+        // Mostrar el cuadro de diï¿½logo para seleccionar una ruta o archivo
         int returnValue = fileChooser.showOpenDialog(this);
 
         if (returnValue == JFileChooser.APPROVE_OPTION) {

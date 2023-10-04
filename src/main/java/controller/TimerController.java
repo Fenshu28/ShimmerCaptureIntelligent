@@ -1,8 +1,8 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 22 sep. 2023
- * Fecha de modificación: 22 sep. 2023
- * Descripción: Clase para
+ * Fecha de creaciÃ³n: 22 sep. 2023
+ * Fecha de modificaciÃ³n: 22 sep. 2023
+ * DescripciÃ³n: Clase para
  *********************************************** */
 package controller;
 

@@ -1,8 +1,8 @@
 /** **********************************************
  * Autores: Cristopher Alexis Zarate Valencia
- * Fecha de creaciÛn: 9 sep. 2023
- * Fecha de modificaciÛn: 18 sep. 2023
- * DescripciÛn: Clase para hacer un hilo para actualizar los componentes del
+ * Fecha de creaci√≥n: 9 sep. 2023
+ * Fecha de modificaci√≥n: 18 sep. 2023
+ * Descripci√≥n: Clase para hacer un hilo para actualizar los componentes del
  * frame.
  *********************************************** */
 package threads;
@@ -43,7 +43,7 @@ public final class UpdateComponentsThread implements Runnable {
             main_Frame.getCon().getStatus_Stream();
             statusRecord = main_Frame.getCon().getStatus_Log();
 
-            // Procesos que ejecutar· solo si el estado cambia.
+            // Procesos que ejecutar√≥ solo si el estado cambia.
             if (!lastConnStatus.equals(connStatus)) {
                 updateLabelConn();
                 updateButtonsConn();
@@ -73,13 +73,13 @@ public final class UpdateComponentsThread implements Runnable {
     }
 
     /**
-     * MÈtodo para actualizar el label del estado de la conexiÛn, determina que
+     * M√©todo para actualizar el label del estado de la conexi√≥n, determina que
      * color modificar y valor del texto.
      */
     private void updateLabelConn() {
         if (connStatus.contains(StatusConection.Conectado.toString())) { // Si esta conectado
             main_Frame.getLbEstado().setForeground(Color.GREEN);
-        } else if (connStatus.contains(StatusConection.Conectando.toString())) { // SÌ esta conectando
+        } else if (connStatus.contains(StatusConection.Conectando.toString())) { // S√≠ esta conectando
             main_Frame.getLbEstado().setForeground(Color.orange);
         } else {
             main_Frame.getLbEstado().setForeground(Color.red);
@@ -139,7 +139,7 @@ public final class UpdateComponentsThread implements Runnable {
     }
 
     private void setActiveButtonsConnection(boolean flag) {
-        // Botones de conexiÛn.
+        // Botones de conexi√≥n.
         main_Frame.getBtnConect().setEnabled(!flag);
         main_Frame.getBtnDisconect().setEnabled(flag);
     }
