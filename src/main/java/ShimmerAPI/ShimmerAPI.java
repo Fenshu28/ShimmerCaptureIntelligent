@@ -13,6 +13,7 @@ import com.shimmerresearch.driver.ShimmerMsg;
 import com.shimmerresearch.pcDriver.ShimmerPC;
 import com.shimmerresearch.tools.bluetooth.BasicShimmerBluetoothManagerPc;
 import controller.TransmisionController;
+import controller.UpdateSignalsController;
 import entity.FileCSV;
 import entity.ShimmerDispositive;
 import resource.StatusConection;
@@ -20,7 +21,7 @@ import resource.StatusLog;
 
 public class ShimmerAPI extends BasicProcessWithCallBack {
 
-    private ShimmerDispositive shimmerDevice = new ShimmerDispositive(new ShimmerPC("ShimmerDevice"));//Shimmer3-9415
+    private ShimmerDispositive shimmerDevice;
     static BasicShimmerBluetoothManagerPc bluetoothManager
             = new BasicShimmerBluetoothManagerPc();
     private boolean mConfigureOnFirstTime = true;
@@ -38,6 +39,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     private TransmisionController transmicion_Cont;
 
     public ShimmerAPI() {
+        shimmerDevice = new ShimmerDispositive(new ShimmerPC("ShimmerDevice"));//Shimmer3-9415
         this.status = StatusConection.Desconectado.toString();
         this.status_Stream = StatusConection.Parado.toString();
         this.status_Log = StatusLog.Stop.toString();
@@ -145,7 +147,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
         int ind = shimmerMSG.mIdentifier;
 
         Object object = (Object) shimmerMSG.mB;
-
+        
         switch (ind) {
             case ShimmerPC.MSG_IDENTIFIER_STATE_CHANGE: {
                 CallbackObject callbackObject = (CallbackObject) object;
@@ -207,11 +209,13 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
             case ShimmerPC.MSG_IDENTIFIER_DATA_PACKET: // Recibiendo paquetes de datos.
                 transmicion_Cont.setShimmerMSG(shimmerMSG);
                 transmicion_Cont.streamData();
+                 
 
                 if (status_Log.contains(StatusLog.Play.toString())) {
                     transmicion_Cont.setMarkExp(markExp);
                     transmicion_Cont.setMarkDinamic(markDinamic);
                     transmicion_Cont.log();
+                   
                 }
                 break;
             case ShimmerPC.MSG_IDENTIFIER_PACKET_RECEPTION_RATE_OVERALL:

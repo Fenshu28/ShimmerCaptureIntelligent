@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 import util.ActivePorts;
 import entity.FileCSV;
+import globals.Global;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -56,8 +57,13 @@ public class MainFrame extends javax.swing.JFrame {
         btnStop.setVisible(false);
 
         con.setMarkExp(txtNumExp.getText());
+        
+        Global.frame = this;
+        
+        txtNameFile.requestFocus();
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Gets y Sets"> 
     public ShimmerAPI getCon() {
         return con;
     }
@@ -149,7 +155,8 @@ public class MainFrame extends javax.swing.JFrame {
     public JLabel getLbTimerRec() {
         return lbTimerRec;
     }
-
+    // </editor-fold>
+    
     /**
      * Llena los componentes por defecto del formaulario.
      */
@@ -188,7 +195,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     /**
-     * Crea la conexi√≥n con el dispositivo Shimmer y inicia el hilo para
+     * Crea la conexiÛn con el dispositivo Shimmer y inicia el hilo para
      * actualizar los componentes del frame segun el estado.
      */
     private void createConexion() {
@@ -204,15 +211,15 @@ public class MainFrame extends javax.swing.JFrame {
         hiloTimCon = new Thread(timer_Con);
         hiloTimCon.start();
         // Hilo para actualizar los label de datos
-        upLabelData_Thread = new UpdateLabelDataThread(this);
-        hiloLabelData = new Thread(upLabelData_Thread);
-        hiloLabelData.start();
+//        upLabelData_Thread = new UpdateLabelDataThread(this);
+//        hiloLabelData = new Thread(upLabelData_Thread);
+//        hiloLabelData.start();
     }
 
     private void desconectar() {
         terminarTransmision();
         timer_Con.setActive(false);
-        upLabelData_Thread.setActive(false);
+//        upLabelData_Thread.setActive(false);
         con.desconectar();
     }
 
@@ -227,12 +234,15 @@ public class MainFrame extends javax.swing.JFrame {
             con.setMarkExp(txtNumExp.getText());
             con.guardar();
             // Hilo para el timer de guardado.
+            if (hiloTimLog != null) {
+                hiloTimLog.stop();
+            }
             timer_Log = new TimerLogThread(this);
             hiloTimLog = new Thread(timer_Log);
             hiloTimLog.start();
         } else {
             JOptionPane.showMessageDialog(this,
-                    "Debe darle un nombre al archivo y elegir donde se guardar√°.",
+                    "Debe darle un nombre al archivo y elegir la ruta donde se guardar·.",
                     "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }
@@ -251,13 +261,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     private void warnigBattery() {
-        if (con.getShimmerDevice().checkBatteryLevel() == 0) {
-            JOptionPane.showMessageDialog(this, """
-                                            Nivel de bateria menor al 20%
-                                            Conecta tu dispositivo Shimmer a una fuente de alimentaci√≥n""",
-                    "Advertencia de bater√≠a baja",
-                    JOptionPane.WARNING_MESSAGE);
-        }
+//        if (con.getShimmerDevice().checkBatteryLevel() == 0) {
+//            JOptionPane.showMessageDialog(this, """
+//                                            Nivel de bateria menor al 20%
+//                                            Conecta tu dispositivo Shimmer a una fuente de alimentaci√≥n""",
+//                    "Advertencia de bater√≠a baja",
+//                    JOptionPane.WARNING_MESSAGE);
+//        }
     }
 
     @SuppressWarnings("unchecked")
@@ -330,12 +340,12 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Lucida Fax", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("<html> <style>       p {color:orange;text-align:center;}     </style> <p>Cuerpo acad√©mico de <br>  sistemas computacionales Inteligentes<p> </html>"); // NOI18N
+        jLabel1.setText("<html> <style>       p {color:orange;text-align:center;}     </style> <p>Cuerpo acadÈmico de <br>  sistemas computacionales Inteligentes<p> </html>"); // NOI18N
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("logo");
 
-        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuraci√≥n del experimento"));
+        pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder("ConfiguraciÛn del experimento"));
         pnlPrincipal.setFont(new java.awt.Font("Franklin Gothic Medium", 0, 14)); // NOI18N
         java.awt.GridBagLayout pnlPrincipalLayout = new java.awt.GridBagLayout();
         pnlPrincipalLayout.columnWidths = new int[] {0, 5, 0, 5, 0};
@@ -345,7 +355,7 @@ public class MainFrame extends javax.swing.JFrame {
         pnlDispositivos.setBorder(javax.swing.BorderFactory.createTitledBorder("Dispositivo y sensores"));
         pnlDispositivos.setFont(new java.awt.Font("Franklin Gothic Medium", 0, 14)); // NOI18N
 
-        jLabel3.setText("Seleccion el puerto del dispositivo");
+        jLabel3.setText("Seleccione el puerto del dispositivo");
 
         cmbPorts.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -364,7 +374,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         chkHR.setText("HR");
 
-        jLabel5.setText("Bater√≠a:");
+        jLabel5.setText("BaterÌa:");
 
         barBattery.setStringPainted(true);
 
@@ -375,7 +385,7 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jLabel11.setText("Estado de conexi√≥n:");
+        jLabel11.setText("Estado de conexiÛn:");
 
         lbEstadoCon.setBackground(new java.awt.Color(102, 102, 102));
         lbEstadoCon.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
@@ -511,15 +521,15 @@ public class MainFrame extends javax.swing.JFrame {
 
         cmbSexo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "M", "F" }));
 
-        jLabel7.setText("Carrera/Profesi√≥n");
+        jLabel7.setText("Carrera/ProfesiÛn");
 
         jLabel8.setText("Semestre");
 
-        cmbSemestre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "Primero", "Segundo", "Tercero", "Cuarto", "Quinto", "Sexto", "Octavo", "Noveno", "D√©cimo" }));
+        cmbSemestre.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "N/A", "Primero", "Segundo", "Tercero", "Cuarto", "Quinto", "Sexto", "Octavo", "Noveno", "DÈcimo" }));
 
         jLabel13.setText("Procedencia");
 
-        cmbProcedencia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sierra Sur", "Ca√±ada", "Costa", "Istmo", "Mixteca", "Papaloapan", "Sierra Norte", "Valles Centrales" }));
+        cmbProcedencia.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Sierra Sur", "CaÒada", "Costa", "Istmo", "Mixteca", "Papaloapan", "Sierra Norte", "Valles Centrales" }));
 
         javax.swing.GroupLayout pnlDatosPacienteLayout = new javax.swing.GroupLayout(pnlDatosPaciente);
         pnlDatosPaciente.setLayout(pnlDatosPacienteLayout);
@@ -595,7 +605,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel9.setText("Nombre del archivo");
         jLabel9.setToolTipText("");
 
-        jLabel10.setText("Marcador dinamico");
+        jLabel10.setText("Marcador din·mico");
 
         btnAddMark.setText("Agregar");
         btnAddMark.setToolTipText("Agregar marcador.");
@@ -698,7 +708,7 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         pnlPrincipal.add(pnlBotnes, gridBagConstraints);
 
-        pnlTransmision.setBorder(javax.swing.BorderFactory.createTitledBorder("Transmisi√≥n"));
+        pnlTransmision.setBorder(javax.swing.BorderFactory.createTitledBorder("TransmisiÛn"));
 
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel12.setText("Tiempo conectado:");
@@ -728,7 +738,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 193, Short.MAX_VALUE)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
                     .addComponent(lbTimerRec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -767,7 +777,7 @@ public class MainFrame extends javax.swing.JFrame {
         pnlPrincipal.add(txtNumExp, gridBagConstraints);
 
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel15.setText("N√∫mero de prueba");
+        jLabel15.setText("N˙mero de prueba");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -848,12 +858,12 @@ public class MainFrame extends javax.swing.JFrame {
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
 //        terminarTransmision();
         if (JOptionPane.showConfirmDialog(this,
-                "ÔøΩEstas seguro que deseas terminar la prueba?",
-                "Terminando prueba", JOptionPane.YES_NO_OPTION) == 1) {
+                "øEstas seguro que deseas terminar la prueba?",
+                "Terminando prueba", JOptionPane.YES_NO_OPTION) == 0) {
             pararGuardado();
             btnPlay.setText("Iniciar experimeto");
             JOptionPane.showMessageDialog(this,
-                    "El archivo se guardo en " + file_CSV.getRuta(),
+                    "El archivo se guardo en " + file_CSV.getRuta() + ".csv",
                     "Experimento finalizado.",
                     JOptionPane.INFORMATION_MESSAGE);
         }

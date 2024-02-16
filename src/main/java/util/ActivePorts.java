@@ -23,20 +23,23 @@ public class ActivePorts {
         String descTemp = new String();
         try {
             SerialPort[] portSys = SerialPort.getCommPorts();
-            
+
             for (SerialPort port : portSys) {
-                if (port.getPortDescription().contains("SPP")) {
-                    descTemp = "Shimmer device";
-                } else {
-                    descTemp = port.getPortDescription();
+                if (!exite(port)) {
+                    if (port.getPortDescription().contains("SPP")) {
+                        descTemp = "Shimmer device";
+                    } else {
+                        descTemp = port.getPortDescription();
+                    }
+
+                    ports.add(new Port(port.getSystemPortName(),
+                            descTemp)); //loadDeviceName(port.getSystemPortName());}
                 }
-                ports.add(new Port(port.getSystemPortName(),
-                            descTemp)); //loadDeviceName(port.getSystemPortName());
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "No se pudieron cargarlos puertos por: " + e.getMessage(),
-                    "Â¡Error inesperado!",
+                    "¡Error inesperado!",
                     JOptionPane.ERROR_MESSAGE);
         }
 
@@ -75,5 +78,15 @@ public class ActivePorts {
     public List<Port> getPorts() {
         loadPorts();
         return ports;
+    }
+
+    private boolean exite(SerialPort puerto) {
+        for (Port port : ports) {
+            if (port.getNombre().contains(puerto.getSystemPortName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

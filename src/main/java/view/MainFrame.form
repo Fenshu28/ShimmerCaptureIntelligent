@@ -215,7 +215,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Seleccion el puerto del dispositivo"/>
+                <Property name="text" type="java.lang.String" value="Seleccione el puerto del dispositivo"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JComboBox" name="cmbPorts">
@@ -580,7 +580,7 @@
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Marcador dinamico"/>
+                <Property name="text" type="java.lang.String" value="Marcador din&#xe1;mico"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="btnAddMark">
@@ -671,7 +671,7 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel18" pref="193" max="32767" attributes="0"/>
+                          <Component id="jLabel18" pref="194" max="32767" attributes="0"/>
                           <Component id="lbTimerRec" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>

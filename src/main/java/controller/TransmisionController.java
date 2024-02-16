@@ -22,6 +22,7 @@ import com.shimmerresearch.tools.bluetooth.BasicShimmerBluetoothManagerPc;
 import entity.ShimmerDispositive;
 import entity.FileCSV;
 import java.util.Collection;
+import resource.StatusLog;
 
 public class TransmisionController {
 
@@ -29,7 +30,7 @@ public class TransmisionController {
     private FileCSV file;
     private String markExp;
     private String markDinamic;
-    private final ShimmerDispositive shimmerDevice;
+    private ShimmerDispositive shimmerDevice;
 
     // Temps
     private double lastHR = 0;
@@ -56,6 +57,7 @@ public class TransmisionController {
         this.datosTemp = new double[8];
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Gets y Sets"> 
     public void setFile(FileCSV file) {
         this.file = file;
         file_Controlle = new FileCsvController(this.file);
@@ -77,6 +79,7 @@ public class TransmisionController {
     public double[] getDatosTemp() {
         return datosTemp;
     }
+    // </editor-fold>
 
     public void streamData() {
 //        shimmerDevice.getData().clear();
@@ -88,6 +91,7 @@ public class TransmisionController {
         getDataPPG(6); // 6,7 - Se agrega el PPG.
         addMarks(8);
 //        saveDataTemp();
+        UpdateSignalsController.updateDataLabel(shimmerDevice.getData());
     }
 
     public void log() {
@@ -195,6 +199,7 @@ public class TransmisionController {
                 shimmerDevice.getData().set(pos, String.valueOf(heartRate));
                 lastHR = heartRate;
             }
+//            System.out.println(shimmerDevice.getData().get(pos));
 
 //            if (heartRate == Double.NaN) {
 //

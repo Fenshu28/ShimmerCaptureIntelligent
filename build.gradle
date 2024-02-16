@@ -10,7 +10,7 @@ application {
 }
 
 compileJava { 
-    options.encoding = "UTF-8" 
+   // options.encoding = "UTF-8" 
 }
 
 repositories {
