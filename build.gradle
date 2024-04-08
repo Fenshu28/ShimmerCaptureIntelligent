@@ -1,13 +1,21 @@
-plugins {
-    id 'java'
+group = 'org.example'
+version = '1.0.0'
+
+apply plugin: 'java'
+
+// Configuración para generar el JAR
+jar {
+    manifest {
+        attributes 'Main-Class': 'view.MainFrame'
+    }
 }
 
-group = 'org.example'
-version = '1.0-SNAPSHOT'
-
-repositories {jcenter()
+repositories {
+    mavenCentral()    
+    //jcenter()
     flatDir {
         dirs 'libs'
+        //dirs 'src\\main\\java\\libs'
     }
     maven {
         name = "GitHubPackages"
@@ -20,7 +28,7 @@ repositories {jcenter()
             username = System.getenv("usr")
             password = System.getenv("key")
             
-}
+            }
     }
 }
 
