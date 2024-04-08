@@ -15,7 +15,7 @@ public class ActivePorts {
     }
 
     /**
-     * Método encargado de cargar los puertos seriales que esten activos en el
+     * MÃ©todo encargado de cargar los puertos seriales que esten activos en el
      * sistema, guardandolos en la lista {@link ports} de tipo {@link Port}.
      */
     private void loadPorts() {
@@ -23,15 +23,18 @@ public class ActivePorts {
         String descTemp = new String();
         try {
             SerialPort[] portSys = SerialPort.getCommPorts();
-            
+
             for (SerialPort port : portSys) {
-                if (port.getPortDescription().contains("SPP")) {
-                    descTemp = "Shimmer device";
-                } else {
-                    descTemp = port.getPortDescription();
+                if (!exite(port)) {
+                    if (port.getPortDescription().contains("SPP")) {
+                        descTemp = "Shimmer device";
+                    } else {
+                        descTemp = port.getPortDescription();
+                    }
+
+                    ports.add(new Port(port.getSystemPortName(),
+                            descTemp)); //loadDeviceName(port.getSystemPortName());}
                 }
-                ports.add(new Port(port.getSystemPortName(),
-                            descTemp)); //loadDeviceName(port.getSystemPortName());
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
@@ -43,7 +46,7 @@ public class ActivePorts {
     }
 
     /**
-     * Método para obtener el nombre del dispositivo que esta usando un
+     * MÃ©todo para obtener el nombre del dispositivo que esta usando un
      * determinado puerto.
      *
      * @param puertoSerialNombre Puerto para analizar.
@@ -54,7 +57,7 @@ public class ActivePorts {
         if (puertoSerial.openPort()) {
             System.out.println("Puerto serial abierto: " + puertoSerial.getSystemPortName());
 
-            // Envía un comando al dispositivo para obtener información
+            // EnvÃ­a un comando al dispositivo para obtener informaciÃ³n
             String comando = "ObtenerInformacion\r\n"; // Reemplaza con el comando adecuado
             puertoSerial.writeBytes(comando.getBytes(), comando.length());
 
@@ -75,5 +78,15 @@ public class ActivePorts {
     public List<Port> getPorts() {
         loadPorts();
         return ports;
+    }
+
+    private boolean exite(SerialPort puerto) {
+        for (Port port : ports) {
+            if (port.getNombre().contains(puerto.getSystemPortName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -19,30 +19,15 @@ repositories {
     }
     maven {
         name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ShimmerEngineering/Shimmer-Java-Android-API")
-            credentials {
-                //username = "Fenshu28"
-                //password = ""
-            //username = project.findProperty("usr") ?: System.getenv("USERNAME")
-            //password = project.findProperty("key") ?: System.getenv("TOKEN")
+        url = uri("https://maven.pkg.github.com/ShimmerEngineering/Shimmer-Java-Android-API")
+        credentials {
             username = System.getenv("usr")
-            password = System.getenv("key")
-            
-            }
     }
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-    // The production code uses the SLF4J logging API at compile time
     implementation 'org.slf4j:slf4j-api:1.7.21'
-    //compile(group: 'com.shimmersensing', name: 'ShimmerDriverPC', version: '0.9.4beta')
-    //compile(group: 'com.shimmersensing', name: 'ShimmerDriverPCDev', version: 'JA-79 v0.1')
-    //implementation 'com.shimmerresearch:shimmerdriverpc'
     implementation(group: 'com.shimmerresearch', name: 'shimmerdriverpc', version: '0.10.0_alpha')
-    implementation(group: 'com.shimmerresearch', name: 'shimmerdriver', version: '0.10.0_alpha')
-    implementation(group: 'com.shimmerresearch', name: 'shimmerbluetoothmanager', version: '0.10.0_alpha')
     implementation name: 'ShimmerBiophysicalProcessingLibrary_Rev_0_11'
     implementation name: 'jssc-2.9.5'
     implementation name: 'flatlaf-3.1.1'
@@ -52,6 +37,8 @@ dependencies {
     implementation name: 'jSerialComm-2.10.3'    
 }
 
-test {
-    useJUnitPlatform()
-}
+
+
+            password = System.getenv("key")
+            
+            }

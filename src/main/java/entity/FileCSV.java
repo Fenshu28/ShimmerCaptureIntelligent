@@ -1,8 +1,8 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creaciÛn: 13/09/2023
- * Fecha de modificaciÛn: 13/09/2023
- * DescripciÛn: Clase para represenar a un archivo CSV y guardar los datos.
+ * Fecha de creaci√≥n: 13/09/2023
+ * Fecha de modificaci√≥n: 13/09/2023
+ * Descripci√≥n: Clase para represenar a un archivo CSV y guardar los datos.
  *********************************************** */
 package entity;
 
@@ -29,11 +29,11 @@ public class FileCSV {
      * Crea la instancia del objeto para controlar en archivo CSV, requiere 2
      * parametros para poder crearlo.
      *
-     * @param ruta Lugar donde se guardar· el archivo.
+     * @param ruta Lugar donde se guardar√≥ el archivo.
      * @param nombre_Archivo Nombre del archivo.
      */
     public FileCSV(String ruta, String nombre_Archivo) {
-        this.ruta = ruta;
+        this.ruta = ruta + "\\";
         this.nombre_Archivo = nombre_Archivo;
     }
 
@@ -50,7 +50,7 @@ public class FileCSV {
         // Formatear la fecha y hora actual
         String fechaHoraFormateada = formato.format(fechaHoraActual);
         try {
-            fileWriter = new FileWriter(ruta + "\\" + nombre_Archivo
+            fileWriter = new FileWriter(ruta + nombre_Archivo
                     + "_" + fechaHoraFormateada + ".csv");
             bufferedWriter = new BufferedWriter(fileWriter);
         } catch (Exception e) {

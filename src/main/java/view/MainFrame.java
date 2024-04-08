@@ -16,6 +16,8 @@ import javax.swing.UIManager;
 import javax.swing.filechooser.FileSystemView;
 import util.ActivePorts;
 import entity.FileCSV;
+import globals.Global;
+import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -27,7 +29,7 @@ import threads.UpdateComponentsThread;
 import threads.UpdateLabelDataThread;
 
 public class MainFrame extends javax.swing.JFrame {
-    
+
     private final ShimmerAPI con;
     private final ActivePorts controllerPorts;
     private List<Port> portsEnables;
@@ -43,112 +45,118 @@ public class MainFrame extends javax.swing.JFrame {
     private Thread hiloTimCon;
     private Thread hiloTimLog;
     private Thread hiloLabelData;
-    
+
     public MainFrame() {
         controllerPorts = new ActivePorts();
         portsEnables = new ArrayList<>();
         initComponents();
         fillComponents();
         con = new ShimmerAPI();
-        
+
         btnPause.setVisible(false);
         btnStop.setVisible(false);
-        
+
         con.setMarkExp(txtNumExp.getText());
+        
+        Global.frame = this;
+        
+        txtNameFile.requestFocus();
     }
-    
+
+    // <editor-fold defaultstate="collapsed" desc="Gets y Sets"> 
     public ShimmerAPI getCon() {
         return con;
     }
-    
+
     public JLabel getLbEstado() {
         return lbEstadoCon;
     }
-    
+
     public JProgressBar getBarBattery() {
         return barBattery;
     }
-    
+
     public JButton getBtnConect() {
         return btnConect;
     }
-    
+
     public JButton getBtnDisconect() {
         return btnDisconect;
     }
-    
+
     public JButton getBtnPause() {
         return btnPause;
     }
-    
+
     public JButton getBtnPlay() {
         return btnPlay;
     }
-    
+
     public JButton getBtnStop() {
         return btnStop;
     }
-    
+
     public JRadioButton getChkGSR() {
         return chkGsrCond;
     }
-    
+
     public JRadioButton getChkPPG() {
         return chkHR;
     }
-    
+
     public JRadioButton getChkGsrCond() {
         return chkGsrCond;
     }
-    
+
     public JRadioButton getChkGsrRes() {
         return chkGsrRes;
     }
-    
+
     public JRadioButton getChkHR() {
         return chkHR;
     }
-    
+
     public JLabel getLbGsrCond() {
         return lbGsrCond;
     }
-    
+
     public JLabel getLbGsrRes() {
         return lbGsrRes;
     }
-    
+
     public JLabel getLbHR() {
         return lbHR;
     }
-    
+
     public JLabel getLbPpg() {
         return lbPpg;
     }
-    
+
     public JButton getBtnChoosePathFile() {
         return btnChoosePathFile;
     }
-    
+
     public JPanel getPnlDatosPaciente() {
         return pnlDatosPaciente;
     }
-    
+
     public JTextField getTxtNameFile() {
         return txtNameFile;
     }
-    
+
     public JLabel getLbEstadoBatt() {
         return lbEstadoBatt;
     }
-    
+
     public JLabel getLbTimerConect() {
         return lbTimerConect;
     }
-    
+
     public JLabel getLbTimerRec() {
         return lbTimerRec;
     }
-
+    // </editor-fold>
+    
     /**
      * Llena los componentes por defecto del formaulario.
      */
@@ -158,21 +166,21 @@ public class MainFrame extends javax.swing.JFrame {
 
     /**
      * Lee los puertos obtenidos en la lista de tipo {@link Port}, para obtener
-     * solo su descripción y mostrarla en el ComboBox de los puertos.
+     * solo su descripcion y mostrarla en el ComboBox de los puertos.
      */
     private void loadPortsComm() {
         List<String> listPornames = new ArrayList<>();
         portsEnables = controllerPorts.getPorts();
         for (Port portsEnable : portsEnables) {
-            listPornames.add(portsEnable.getDescripción());
+            listPornames.add(portsEnable.getDescripcion());
         }
         fillCombo(cmbPorts, listPornames);
     }
 
     /**
-     * Método para llenar un ComboBox con datos de una lista de cadenas.
+     * MÃ©todo para llenar un ComboBox con datos de una lista de cadenas.
      *
-     * @param combo ComboBox que se llenará
+     * @param combo ComboBox que se llenarÃ¡
      * @param lista Lista de elementos para insertar en el ComboBox.
      */
     private void fillCombo(JComboBox<String> combo, List<String> lista) {
@@ -198,27 +206,27 @@ public class MainFrame extends javax.swing.JFrame {
         update_Thread = new UpdateComponentsThread(this);
         hiloComp = new Thread(update_Thread);
         hiloComp.start();
-        // Hilo para el timer de conexión.
+        // Hilo para el timer de conexiÃ³n.
         timer_Con = new TimerConectThread(this);
         hiloTimCon = new Thread(timer_Con);
         hiloTimCon.start();
         // Hilo para actualizar los label de datos
-        upLabelData_Thread = new UpdateLabelDataThread(this);
-        hiloLabelData = new Thread(upLabelData_Thread);
-        hiloLabelData.start();
+//        upLabelData_Thread = new UpdateLabelDataThread(this);
+//        hiloLabelData = new Thread(upLabelData_Thread);
+//        hiloLabelData.start();
     }
-    
+
     private void desconectar() {
         terminarTransmision();
         timer_Con.setActive(false);
-        upLabelData_Thread.setActive(false);
+//        upLabelData_Thread.setActive(false);
         con.desconectar();
     }
-    
+
     private void terminarTransmision() {
         con.destransmitir();
     }
-    
+
     private void iniciarGuardado() {
         if (file_CSV != null) {
             warnigBattery();
@@ -226,39 +234,42 @@ public class MainFrame extends javax.swing.JFrame {
             con.setMarkExp(txtNumExp.getText());
             con.guardar();
             // Hilo para el timer de guardado.
+            if (hiloTimLog != null) {
+                hiloTimLog.stop();
+            }
             timer_Log = new TimerLogThread(this);
             hiloTimLog = new Thread(timer_Log);
             hiloTimLog.start();
         } else {
             JOptionPane.showMessageDialog(this,
-                    "Debe darle un nombre al archivo y elegir donde se guardará.",
+                    "Debe darle un nombre al archivo y elegir la ruta donde se guardará.",
                     "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
     }
-    
+
     private void contiGuardado() {
         warnigBattery();
         con.contGuardar();
     }
-    
+
     private void pausaGuardado() {
         con.cerrarGuardar();
     }
-    
+
     private void pararGuardado() {
         con.terminarGuardado();
     }
-    
+
     private void warnigBattery() {
-        if (con.getShimmerDevice().checkBatteryLevel() == 1) {
-            JOptionPane.showMessageDialog(this, """
-                                            Nivel de bateria menor al 20%
-                                            Conecta tu dispositivo Shimmer a una fuente de alimentación""",
-                    "Advertencia de batería baja",
-                    JOptionPane.WARNING_MESSAGE);
-        }
+//        if (con.getShimmerDevice().checkBatteryLevel() == 0) {
+//            JOptionPane.showMessageDialog(this, """
+//                                            Nivel de bateria menor al 20%
+//                                            Conecta tu dispositivo Shimmer a una fuente de alimentaciÃ³n""",
+//                    "Advertencia de baterÃ­a baja",
+//                    JOptionPane.WARNING_MESSAGE);
+//        }
     }
-    
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -316,6 +327,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel18 = new javax.swing.JLabel();
         txtNumExp = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
+        btnAsignarPru = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Shimmer Computer Intelligent");
@@ -328,7 +340,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Lucida Fax", 1, 24)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("<html>\n<style>\n      p {color:orange;text-align:center;}\n    </style>\n<p>Cuerpo académico de <br> \nsistemas computacionales Inteligentes<p>\n</html>"); // NOI18N
+        jLabel1.setText("<html> <style>       p {color:orange;text-align:center;}     </style> <p>Cuerpo académico de <br>  sistemas computacionales Inteligentes<p> </html>"); // NOI18N
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("logo");
@@ -336,14 +348,14 @@ public class MainFrame extends javax.swing.JFrame {
         pnlPrincipal.setBorder(javax.swing.BorderFactory.createTitledBorder("Configuración del experimento"));
         pnlPrincipal.setFont(new java.awt.Font("Franklin Gothic Medium", 0, 14)); // NOI18N
         java.awt.GridBagLayout pnlPrincipalLayout = new java.awt.GridBagLayout();
-        pnlPrincipalLayout.columnWidths = new int[] {0, 5, 0};
+        pnlPrincipalLayout.columnWidths = new int[] {0, 5, 0, 5, 0};
         pnlPrincipalLayout.rowHeights = new int[] {0, 5, 0, 5, 0, 5, 0, 5, 0};
         pnlPrincipal.setLayout(pnlPrincipalLayout);
 
         pnlDispositivos.setBorder(javax.swing.BorderFactory.createTitledBorder("Dispositivo y sensores"));
         pnlDispositivos.setFont(new java.awt.Font("Franklin Gothic Medium", 0, 14)); // NOI18N
 
-        jLabel3.setText("Seleccion el puerto del dispositivo");
+        jLabel3.setText("Seleccione el puerto del dispositivo");
 
         cmbPorts.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -448,7 +460,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(chkHR)
                     .addComponent(chkPPG)
                     .addComponent(barBattery, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(11, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlDispositivosLayout.setVerticalGroup(
             pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -569,6 +581,7 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         pnlPrincipal.add(pnlDatosPaciente, gridBagConstraints);
 
@@ -592,7 +605,7 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel9.setText("Nombre del archivo");
         jLabel9.setToolTipText("");
 
-        jLabel10.setText("Marcador dinamico");
+        jLabel10.setText("Marcador dinámico");
 
         btnAddMark.setText("Agregar");
         btnAddMark.setToolTipText("Agregar marcador.");
@@ -656,6 +669,7 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE;
@@ -724,7 +738,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlTransmisionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                    .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
                     .addComponent(lbTimerRec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -759,6 +773,7 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 0.1;
         pnlPrincipal.add(txtNumExp, gridBagConstraints);
 
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
@@ -769,6 +784,17 @@ public class MainFrame extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         pnlPrincipal.add(jLabel15, gridBagConstraints);
 
+        btnAsignarPru.setText("Asignar");
+        btnAsignarPru.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAsignarPruActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        pnlPrincipal.add(btnAsignarPru, gridBagConstraints);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -776,7 +802,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 739, Short.MAX_VALUE)
+                    .addComponent(pnlPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -803,7 +829,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReloadActionPerformed
 
     private void cmbPortsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPortsActionPerformed
-        
+
         if (cmbPorts.getItemCount() > 0) {
             selectedPort = portsEnables.get(
                     cmbPorts.getSelectedIndex()).getNombre();
@@ -831,12 +857,17 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void btnStopActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStopActionPerformed
 //        terminarTransmision();
-        pararGuardado();
-        btnPlay.setText("Iniciar experimeto");
-        JOptionPane.showMessageDialog(this,
-                "El archivo se guardo en " + file_CSV.getRuta(),
-                "Experimento finalizado.",
-                JOptionPane.INFORMATION_MESSAGE);
+        if (JOptionPane.showConfirmDialog(this,
+                "¿Estas seguro que deseas terminar la prueba?",
+                "Terminando prueba", JOptionPane.YES_NO_OPTION) == 0) {
+            pararGuardado();
+            btnPlay.setText("Iniciar experimeto");
+            JOptionPane.showMessageDialog(this,
+                    "El archivo se guardo en " + file_CSV.getRuta() + ".csv",
+                    "Experimento finalizado.",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
+
     }//GEN-LAST:event_btnStopActionPerformed
 
     private void btnDisconectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisconectActionPerformed
@@ -862,9 +893,9 @@ public class MainFrame extends javax.swing.JFrame {
                 FileSystemView.getFileSystemView().
                         getFileSystemView().getHomeDirectory());
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        // Mostrar el cuadro de diálogo para seleccionar una ruta o archivo
+        // Mostrar el cuadro de diï¿½logo para seleccionar una ruta o archivo
         int returnValue = fileChooser.showOpenDialog(this);
-        
+
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             // Obtener la ruta selecionada
             File selectedFile = fileChooser.getSelectedFile();
@@ -877,7 +908,10 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnChoosePathFileActionPerformed
 
     private void txtNumExpKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNumExpKeyPressed
-        con.setMarkExp(txtNumExp.getText());
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            con.setMarkExp(txtNumExp.getText());
+        }
+
     }//GEN-LAST:event_txtNumExpKeyPressed
 
     private void btnRemoveMarkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveMarkActionPerformed
@@ -890,25 +924,16 @@ public class MainFrame extends javax.swing.JFrame {
         if (con.getStatus().contains(StatusConection.Conectado.toString()))
             desconectar();
     }//GEN-LAST:event_formWindowClosing
-    
-    public static void main(String args[]) {
-        try {
-            UIManager.setLookAndFeel(new FlatArcOrangeIJTheme());
-        } catch (Exception ex) {
-            System.err.println("Failed to initialize FlatLaf");
-        }
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainFrame().setVisible(true);
-            }
-        });
-    }
+    private void btnAsignarPruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAsignarPruActionPerformed
+        con.setMarkExp(txtNumExp.getText());
+    }//GEN-LAST:event_btnAsignarPruActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JProgressBar barBattery;
     private javax.swing.JButton btnAddMark;
+    private javax.swing.JButton btnAsignarPru;
     private javax.swing.JButton btnChoosePathFile;
     private javax.swing.JButton btnConect;
     private javax.swing.JButton btnDisconect;

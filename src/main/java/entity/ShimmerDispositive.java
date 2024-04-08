@@ -1,8 +1,8 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 16 sep. 2023
- * Fecha de modificación: 16 sep. 2023
- * Descripción: Clase para representar un dispositivo shimmer.
+ * Fecha de creaciÃ³n: 16 sep. 2023
+ * Fecha de modificaciÃ³n: 16 sep. 2023
+ * DescripciÃ³n: Clase para representar un dispositivo shimmer.
  *********************************************** */
 package entity;
 

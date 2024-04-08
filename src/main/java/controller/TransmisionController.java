@@ -1,8 +1,8 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 18 sep. 2023
- * Fecha de modificación: 18 sep. 2023
- * Descripción: Clase para controllar la transmisión.
+ * Fecha de creaciÃ³n: 18 sep. 2023
+ * Fecha de modificaciÃ³n: 18 sep. 2023
+ * DescripciÃ³n: Clase para controllar la transmisiÃ³n.
  *********************************************** */
 package controller;
 
@@ -22,6 +22,7 @@ import com.shimmerresearch.tools.bluetooth.BasicShimmerBluetoothManagerPc;
 import entity.ShimmerDispositive;
 import entity.FileCSV;
 import java.util.Collection;
+import resource.StatusLog;
 
 public class TransmisionController {
 
@@ -29,7 +30,7 @@ public class TransmisionController {
     private FileCSV file;
     private String markExp;
     private String markDinamic;
-    private final ShimmerDispositive shimmerDevice;
+    private ShimmerDispositive shimmerDevice;
 
     // Temps
     private double lastHR = 0;
@@ -56,6 +57,7 @@ public class TransmisionController {
         this.datosTemp = new double[8];
     }
 
+    // <editor-fold defaultstate="collapsed" desc="Gets y Sets"> 
     public void setFile(FileCSV file) {
         this.file = file;
         file_Controlle = new FileCsvController(this.file);
@@ -77,6 +79,7 @@ public class TransmisionController {
     public double[] getDatosTemp() {
         return datosTemp;
     }
+    // </editor-fold>
 
     public void streamData() {
 //        shimmerDevice.getData().clear();
@@ -88,6 +91,7 @@ public class TransmisionController {
         getDataPPG(6); // 6,7 - Se agrega el PPG.
         addMarks(8);
 //        saveDataTemp();
+        UpdateSignalsController.updateDataLabel(shimmerDevice.getData());
     }
 
     public void log() {
@@ -187,7 +191,7 @@ public class TransmisionController {
 
             heartRate = heartRateCalculation.ppgToHrConversion(dataArrayPPG, ppgTimeStamp);
 
-            // Aquí guardar los datos.
+            // AquÃ­ guardar los datos.
             if (heartRate == INVALID_RESULT) {
 //                heartRate = Double.NaN;
                 shimmerDevice.getData().set(pos, String.valueOf(lastHR));
@@ -195,6 +199,7 @@ public class TransmisionController {
                 shimmerDevice.getData().set(pos, String.valueOf(heartRate));
                 lastHR = heartRate;
             }
+//            System.out.println(shimmerDevice.getData().get(pos));
 
 //            if (heartRate == Double.NaN) {
 //
@@ -343,7 +348,7 @@ public class TransmisionController {
     }
 
     /**
-     * Añade las marcas a la lista de datos.
+     * AÃ±ade las marcas a la lista de datos.
      */
     private void addMarks(int pos) {
         shimmerDevice.getData().set(pos, markExp);

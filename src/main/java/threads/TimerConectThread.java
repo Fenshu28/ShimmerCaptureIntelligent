@@ -1,8 +1,8 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 22 sep. 2023
- * Fecha de modificación: 22 sep. 2023
- * Descripción: Clase para crear un hilo que ejecute timer para el control del
+ * Fecha de creaciÃ³n: 22 sep. 2023
+ * Fecha de modificaciÃ³n: 22 sep. 2023
+ * DescripciÃ³n: Clase para crear un hilo que ejecute timer para el control del
  * tiempo de conectado.
  *********************************************** */
 package threads;

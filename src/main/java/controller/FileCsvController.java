@@ -1,7 +1,7 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 20 sep. 2023
- * Descripción: Clase para controlar los datos que se crearan en el CSV.
+ * Fecha de creaciÃ³n: 20 sep. 2023
+ * DescripciÃ³n: Clase para controlar los datos que se crearan en el CSV.
  *********************************************** */
 package controller;
 

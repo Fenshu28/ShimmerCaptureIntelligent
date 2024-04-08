@@ -1,8 +1,8 @@
 /** **********************************************
  * Autor: Cristopher Alexis Zarate Valencia
- * Fecha de creación: 21 sep. 2023
- * Fecha de modificación: 21 sep. 2023
- * Descripción: Clase para
+ * Fecha de creaciÃ³n: 21 sep. 2023
+ * Fecha de modificaciÃ³n: 21 sep. 2023
+ * DescripciÃ³n: Clase para
  *********************************************** */
 package view;
 
@@ -11,43 +11,43 @@ import java.awt.*;
 
 public class Cargando {
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Ejemplo de Pantalla de Carga");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 300);
-            frame.setLayout(new BorderLayout());
-
-            JButton startButton = new JButton("Iniciar Proceso");
-            frame.add(startButton, BorderLayout.CENTER);
-
-            startButton.addActionListener(e -> {
-                // Muestra la pantalla de carga
-                LoadingScreen loadingScreen = new LoadingScreen(frame);
-                loadingScreen.setVisible(true);
-
-                // Ejecuta el proceso en un hilo separado
-                SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
-                    @Override
-                    protected Void doInBackground() throws Exception {
-                        // Simula un proceso largo
-                        Thread.sleep(3000);
-                        return null;
-                    }
-
-                    @Override
-                    protected void done() {
-                        // Oculta la pantalla de carga cuando el proceso ha terminado
-                        loadingScreen.dispose();
-                    }
-                };
-
-                worker.execute();
-            });
-
-            frame.setVisible(true);
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> {
+//            JFrame frame = new JFrame("Ejemplo de Pantalla de Carga");
+//            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//            frame.setSize(400, 300);
+//            frame.setLayout(new BorderLayout());
+//
+//            JButton startButton = new JButton("Iniciar Proceso");
+//            frame.add(startButton, BorderLayout.CENTER);
+//
+//            startButton.addActionListener(e -> {
+//                // Muestra la pantalla de carga
+//                LoadingScreen loadingScreen = new LoadingScreen(frame);
+//                loadingScreen.setVisible(true);
+//
+//                // Ejecuta el proceso en un hilo separado
+//                SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>() {
+//                    @Override
+//                    protected Void doInBackground() throws Exception {
+//                        // Simula un proceso largo
+//                        Thread.sleep(3000);
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    protected void done() {
+//                        // Oculta la pantalla de carga cuando el proceso ha terminado
+//                        loadingScreen.dispose();
+//                    }
+//                };
+//
+//                worker.execute();
+//            });
+//
+//            frame.setVisible(true);
+//        });
+//    }
 }
 
 class LoadingScreen extends JDialog {
