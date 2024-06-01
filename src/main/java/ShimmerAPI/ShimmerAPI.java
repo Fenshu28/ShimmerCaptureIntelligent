@@ -34,6 +34,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
     private FileCSV file;
     private String markExp;
     private String markDinamic;
+    private double samplingFreq;
 
     // Controladores
     private TransmisionController transmicion_Cont;
@@ -43,8 +44,13 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
         this.status = StatusConection.Desconectado.toString();
         this.status_Stream = StatusConection.Parado.toString();
         this.status_Log = StatusLog.Stop.toString();
+        this.samplingFreq = 60; // Frecuencia de muestreo
     }
 
+    public void setSamplingFreq(double samplingFreq) {
+        this.samplingFreq = samplingFreq;
+    }    
+    
     public String getMarkExp() {
         return markExp;
     }
@@ -161,6 +167,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                             shimmerDevice = new ShimmerDispositive((ShimmerPC) bluetoothManager.
                                     getShimmerDeviceBtConnected(
                                             deviceComPort));
+                            shimmerDevice.writeShimmerAndSensorsSamplingRate(samplingFreq);
 
                             //5 beats to average
                             if (mConfigureOnFirstTime) {

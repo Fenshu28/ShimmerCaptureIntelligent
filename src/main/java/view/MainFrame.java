@@ -280,7 +280,6 @@ public class MainFrame extends javax.swing.JFrame {
         pnlPrincipal = new javax.swing.JPanel();
         pnlDispositivos = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        cmbPorts = new javax.swing.JComboBox<>();
         btnConect = new javax.swing.JButton();
         chkGsrCond = new javax.swing.JRadioButton();
         chkHR = new javax.swing.JRadioButton();
@@ -297,6 +296,7 @@ public class MainFrame extends javax.swing.JFrame {
         chkGsrRes = new javax.swing.JRadioButton();
         lbGsrRes = new javax.swing.JLabel();
         lbEstadoBatt = new javax.swing.JLabel();
+        cmbPorts = new javax.swing.JComboBox<>();
         pnlDatosPaciente = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         txtEdad = new javax.swing.JTextField();
@@ -357,12 +357,6 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel3.setText("Seleccione el puerto del dispositivo");
 
-        cmbPorts.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbPortsActionPerformed(evt);
-            }
-        });
-
         btnConect.setText("Conectar");
         btnConect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -417,6 +411,12 @@ public class MainFrame extends javax.swing.JFrame {
         lbEstadoBatt.setForeground(new java.awt.Color(204, 0, 51));
         lbEstadoBatt.setText("-");
 
+        cmbPorts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbPortsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlDispositivosLayout = new javax.swing.GroupLayout(pnlDispositivos);
         pnlDispositivos.setLayout(pnlDispositivosLayout);
         pnlDispositivosLayout.setHorizontalGroup(
@@ -432,8 +432,8 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(pnlDispositivosLayout.createSequentialGroup()
                                 .addGroup(pnlDispositivosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel3)
-                                    .addComponent(cmbPorts, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(cmbPorts, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnReload)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -828,16 +828,6 @@ public class MainFrame extends javax.swing.JFrame {
         loadPortsComm();
     }//GEN-LAST:event_btnReloadActionPerformed
 
-    private void cmbPortsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPortsActionPerformed
-
-        if (cmbPorts.getItemCount() > 0) {
-            selectedPort = portsEnables.get(
-                    cmbPorts.getSelectedIndex()).getNombre();
-            System.out.println("puerto seleccionado: " + selectedPort);
-        }
-
-    }//GEN-LAST:event_cmbPortsActionPerformed
-
     private void btnConectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConectActionPerformed
         createConexion();
     }//GEN-LAST:event_btnConectActionPerformed
@@ -928,6 +918,14 @@ public class MainFrame extends javax.swing.JFrame {
     private void btnAsignarPruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAsignarPruActionPerformed
         con.setMarkExp(txtNumExp.getText());
     }//GEN-LAST:event_btnAsignarPruActionPerformed
+
+    private void cmbPortsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPortsActionPerformed
+        if (cmbPorts.getItemCount() > 0) {
+            selectedPort = portsEnables.get(
+                    cmbPorts.getSelectedIndex()).getNombre();
+            System.out.println("puerto seleccionado: " + selectedPort);
+        }
+    }//GEN-LAST:event_cmbPortsActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
