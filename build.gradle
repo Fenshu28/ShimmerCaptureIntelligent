@@ -3,12 +3,16 @@ version = '1.0.0'
 
 apply plugin: 'java'
 
-// Configuración para generar el JAR
+// Configuraciï¿½n para generar el JAR
 jar {
     manifest {
         attributes 'Main-Class': 'view.MainFrame'
     }
 }
+
+ tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8" // Ejemplo con codificaciÃ³n UTF-8
+    }
 
 repositories {
     mavenCentral()    
@@ -22,6 +26,7 @@ repositories {
         url = uri("https://maven.pkg.github.com/ShimmerEngineering/Shimmer-Java-Android-API")
         credentials {
             username = System.getenv("usr")
+            password = System.getenv("key")
     }
 }
 
@@ -36,9 +41,4 @@ dependencies {
     implementation name: 'flatlaf-swingx-3.1.1'
     implementation name: 'jSerialComm-2.10.3'    
 }
-
-
-
-            password = System.getenv("key")
-            
-            }
+}

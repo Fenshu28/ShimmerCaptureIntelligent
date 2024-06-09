@@ -39,7 +39,7 @@ public class ActivePorts {
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null,
                     "No se pudieron cargarlos puertos por: " + e.getMessage(),
-                    "¡Error inesperado!",
+                    "Â¡Error inesperado!",
                     JOptionPane.ERROR_MESSAGE);
         }
 
