@@ -201,6 +201,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void createConexion() {
         con.setDeviceComPort(selectedPort);
         con.conectar();
+//        con.setSamplingFreq(51.2); // frecuencia de muestreo
 
         // Hilo para actualizar componentes.
         update_Thread = new UpdateComponentsThread(this);
@@ -230,7 +231,7 @@ public class MainFrame extends javax.swing.JFrame {
     private void iniciarGuardado() {
         if (file_CSV != null) {
             warnigBattery();
-            con.setMarkDinamic("");
+            con.setMarkDinamic("NaN");
             con.setMarkExp(txtNumExp.getText());
             con.guardar();
             // Hilo para el timer de guardado.

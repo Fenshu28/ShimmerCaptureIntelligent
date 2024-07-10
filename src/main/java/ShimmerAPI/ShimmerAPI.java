@@ -44,11 +44,15 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
         this.status = StatusConection.Desconectado.toString();
         this.status_Stream = StatusConection.Parado.toString();
         this.status_Log = StatusLog.Stop.toString();
-        this.samplingFreq = 60; // Frecuencia de muestreo
     }
 
     public void setSamplingFreq(double samplingFreq) {
         this.samplingFreq = samplingFreq;
+        shimmerDevice.writeShimmerAndSensorsSamplingRate(this.samplingFreq);
+    }
+
+    public double getSamplingFreq() {
+        return samplingFreq;
     }    
     
     public String getMarkExp() {
@@ -106,6 +110,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
         transmicion_Cont = new TransmisionController(shimmerDevice);
         bluetoothManager.connectShimmerThroughCommPort(deviceComPort);
         setWaitForData(bluetoothManager.callBackObject);
+//        shimmerDevice.writeShimmerAndSensorsSamplingRate(samplingFreq);
     }
 
     public void desconectar() {
@@ -153,7 +158,7 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
         int ind = shimmerMSG.mIdentifier;
 
         Object object = (Object) shimmerMSG.mB;
-        
+
         switch (ind) {
             case ShimmerPC.MSG_IDENTIFIER_STATE_CHANGE: {
                 CallbackObject callbackObject = (CallbackObject) object;
@@ -167,11 +172,11 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
                             shimmerDevice = new ShimmerDispositive((ShimmerPC) bluetoothManager.
                                     getShimmerDeviceBtConnected(
                                             deviceComPort));
-                            shimmerDevice.writeShimmerAndSensorsSamplingRate(samplingFreq);
+//                           shimmerDevice.setShimmerAndSensorsSamplingRate(1.0);
 
                             //5 beats to average
                             if (mConfigureOnFirstTime) {
-
+                                
                                 transmicion_Cont.configPPG(bluetoothManager);
 
                                 mConfigureOnFirstTime = false;
@@ -216,13 +221,12 @@ public class ShimmerAPI extends BasicProcessWithCallBack {
             case ShimmerPC.MSG_IDENTIFIER_DATA_PACKET: // Recibiendo paquetes de datos.
                 transmicion_Cont.setShimmerMSG(shimmerMSG);
                 transmicion_Cont.streamData();
-                 
 
                 if (status_Log.contains(StatusLog.Play.toString())) {
                     transmicion_Cont.setMarkExp(markExp);
                     transmicion_Cont.setMarkDinamic(markDinamic);
                     transmicion_Cont.log();
-                   
+
                 }
                 break;
             case ShimmerPC.MSG_IDENTIFIER_PACKET_RECEPTION_RATE_OVERALL:
